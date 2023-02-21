@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap');
+
+/*  ==========
+    Resets
+    ===========   */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+img,
+svg {
+  width: 100%;
+}
+
+/*  ==========
+    Global
+    ===========   */
+
+:root {
+  --clr-blue-400: hsl(209, 23%, 22%);
+  --clr-blue-600: hsl(207, 26%, 16%);
+  --clr-blue-800: hsl(200, 15%, 8%);
+
+  --clr-gray-200: hsl(0, 0%, 98%);
+  --clr-gray-400: hsl(0, 0%, 52%);
+
+  --clr-white-400: hsl(0, 0%, 100%);
+
+  --clr-bg: var(--clr-gray-200);
+  --clr-fg: var(--clr-blue-800);
+  --clr-el: var(--clr-white-400);
+  --clr-label: var(--clr-gray-400);
+
+  --border: 0.2rem;
+
+  --shadow-200: 0 5px 5px rgb(0 0 0 / .05);
+  --shadow-400: 0px 5px 5px rgb(0 0 0 / .1);
+}
+
+/*  ==========
+    Typography
+    ===========   */
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background-color: var(--clr-bg);
+}
