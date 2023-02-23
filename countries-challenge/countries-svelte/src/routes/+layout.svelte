@@ -74,6 +74,6 @@
 		min-height: calc(100dvh - 90px);
 		padding: 1rem;
 		max-width: 1440px;
-		margin: 2rem auto;
+		margin: auto;
 	}
 </style>

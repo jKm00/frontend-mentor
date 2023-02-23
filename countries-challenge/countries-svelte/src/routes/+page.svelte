@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 
-	export let data: any;
+	export let data: PageData;
 
 	let input = '';
 	let region = '';
@@ -14,10 +14,6 @@
 			c.name.common.toLowerCase().includes(input.toLowerCase()) && c.region.toLowerCase() === region
 		);
 	});
-
-	$: console.log(region);
-
-	$: console.log(filteredCountries);
 </script>
 
 <nav class="nav">
@@ -53,7 +49,7 @@
 
 <section class="grid">
 	{#each filteredCountries as country}
-		<a class="card" href={`/${country.name.official.toLowerCase()}`}>
+		<a class="card" href={`/countries/${country.name.common.toLowerCase()}`}>
 			<img
 				class="flag"
 				src={country.flags.png}
@@ -64,7 +60,7 @@
 				<h2 class="card-title">{country.name.common}</h2>
 				<p class="card-stat">
 					<span class="card-stat-label">Population:</span>
-					{country.population}
+					{country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 				</p>
 				<p class="card-stat"><span class="card-stat-label">Region:</span> {country.region}</p>
 				<p class="card-stat"><span class="card-stat-label">Capital:</span> {country.capital}</p>
@@ -77,7 +73,7 @@
 	.nav {
 		display: grid;
 		gap: 2rem;
-		margin-bottom: 2rem;
+		margin-block: 2rem;
 	}
 
 	.search {
