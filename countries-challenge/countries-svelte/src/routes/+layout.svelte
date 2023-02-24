@@ -1,7 +1,21 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { theme } from '../stores/theme';
 	import './styles.css';
 
-	let darkMode = false;
+	let body: HTMLElement | null;
+
+	onMount(() => {
+		body = document.querySelector('body');
+	});
+
+	$: body?.setAttribute('data-theme', $theme);
+
+	const toggleTheme = () => {
+		theme.update(() => {
+			return $theme === 'dark' ? 'light' : 'dark';
+		});
+	};
 </script>
 
 <header class="header">
@@ -9,7 +23,7 @@
 		<h1 class="title">Where in the world?</h1>
 		<div class="theme-toggler">
 			<label for="theme-toggler" class="theme-toggler-label">
-				{#if darkMode}
+				{#if $theme === 'dark'}
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"
 						><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
 							d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
@@ -24,7 +38,7 @@
 				{/if}
 				<p class="theme-toggler-text">Dark Mode</p>
 			</label>
-			<input type="checkbox" id="theme-toggler" />
+			<input type="checkbox" id="theme-toggler" on:change={toggleTheme} />
 		</div>
 	</div>
 </header>
@@ -52,11 +66,13 @@
 
 	.title {
 		font-size: 1.2rem;
+		color: var(--clr-fg);
 	}
 
 	svg {
 		width: 0.8rem;
 		transform: rotate(-20deg);
+		fill: var(--clr-fg);
 	}
 
 	.theme-toggler input {
@@ -68,6 +84,7 @@
 		gap: 1rem;
 		font-weight: 600;
 		cursor: pointer;
+		color: vaR(--clr-fg);
 	}
 
 	.main {

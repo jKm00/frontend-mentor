@@ -31,6 +31,7 @@
 
 	.home-btn svg {
 		width: 1.25rem;
+		fill: var(--clr-fg);
 	}
 
 	.home-btn:hover,

@@ -81,10 +81,11 @@
 		padding: 1rem 1.5rem;
 		border-radius: var(--border);
 		box-shadow: var(--shadow-200);
+		background-color: var(--clr-el);
 	}
 
 	.search::placeholder {
-		color: var(--clr-label);
+		color: var(--clr-fg);
 	}
 
 	.dropdown-wrapper {
@@ -101,6 +102,8 @@
 		padding: 1rem 1.5rem;
 		border-radius: var(--border);
 		box-shadow: var(--shadow-200);
+		background-color: var(--clr-el);
+		color: var(--clr-fg);
 
 		position: relative;
 		min-width: 12rem;
@@ -113,6 +116,7 @@
 		right: 1rem;
 		transform: translateY(-50%);
 		width: 0.75rem;
+		fill: var(--clr-fg);
 
 		transition: transform 150ms ease-in-out;
 

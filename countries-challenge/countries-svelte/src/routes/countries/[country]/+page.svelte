@@ -90,6 +90,10 @@
 </article>
 
 <style scoped>
+	article {
+		color: var(--clr-fg);
+	}
+
 	.flag {
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
