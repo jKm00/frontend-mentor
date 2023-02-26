@@ -82,6 +82,7 @@
 		border-radius: var(--border);
 		box-shadow: var(--shadow-200);
 		background-color: var(--clr-el);
+		color: var(--clr-fg);
 	}
 
 	.search::placeholder {
