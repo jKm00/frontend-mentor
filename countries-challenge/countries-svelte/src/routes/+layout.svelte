@@ -18,6 +18,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Where in the world?</title>
+</svelte:head>
+
 <header class="header">
 	<div class="content">
 		<h1 class="title">Where in the world?</h1>

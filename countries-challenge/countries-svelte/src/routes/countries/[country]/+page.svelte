@@ -30,6 +30,10 @@
 	$: console.log(country);
 </script>
 
+<svelte:head>
+	<title>{country.name.common}</title>
+</svelte:head>
+
 <article>
 	<img class="flag" src={country.flags.png} alt={`Flag of ${country.name.common}`} />
 	<div class="wrapper">
