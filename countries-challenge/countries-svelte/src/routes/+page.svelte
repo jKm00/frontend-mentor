@@ -100,6 +100,7 @@
 
 	.search--wrapper svg {
 		width: 1rem;
+		fill: var(--clr-fg);
 	}
 
 	.search {
