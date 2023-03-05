@@ -1,0 +1,73 @@
+/* Resets */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  color: var(--clr-fg-400);
+}
+
+/* Global */
+
+:root {
+  --clr-bg: #21212d;
+  --clr-fg-400: #fff;
+  --clr-fg-200: #808796;
+  --clr-el: #2c2c38;
+  --clr-accent-bg: #6761cd;
+  --clr-accent-bg-dark: #5751c8;
+  --clr-accent-bg-darker: #443dc2;
+  --clr-accent-fg: #fff;
+
+  --fs-body: 1rem;
+  --fs-label: 0.75rem;
+  --fs-label-big: 0.85rem;
+
+  /* Letter spacing */
+  --ls: 0.25rem;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+  color: var(--clr-fg-400);
+
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  min-height: 100vh;
+
+  transition: background-color 500ms ease-in-out, color 500ms ease-in-out;
+}
+
+body[data-theme="light"] {
+  --clr-bg: #fafafa;
+  --clr-fg-400: #1d1d1d;
+  --clr-fg-200: #bfbfbf;
+  --clr-el: #fff;
+}
+
+
+/* Elements */
+
+.btn {
+  color: var(--clr-accent-fg);
+
+  background-color: var(--clr-accent-bg);
+  border-radius: 100vh;
+  padding: 1em 1.5em;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background-color: var(--clr-accent-bg-dark);
+}
+
+.btn:active {
+  background-color: var(--clr-accent-bg-darker);
+}
