@@ -102,6 +102,8 @@
 	let showCreateNewBoard = false;
 
 	const createBoard = (event: CustomEvent<{ name: string }>) => {
+		if (event.detail.name.length === 0) return;
+
 		const newBoardId = $boards.length > 0 ? $boards[$boards.length - 1].id + 1 : 0;
 
 		$boards = [
@@ -170,7 +172,11 @@
 	</footer>
 </aside>
 <main class="main">
-	<BoardView boardId={activeBoard} />
+	<BoardView
+		boardId={activeBoard}
+		on:create={() => (showCreateNewBoard = true)}
+		on:delete={() => ($boards.length > 0 ? (activeBoard = $boards[0].id) : 0)}
+	/>
 </main>
 <Modal bind:showModal={showCreateNewBoard}>
 	<CreateNewBoard on:create={createBoard} />
@@ -186,6 +192,7 @@
 		align-items: start;
 		justify-content: space-between;
 
+		max-height: 100vh;
 		background-color: var(--clr-el);
 		padding-block: 1rem;
 	}
@@ -209,7 +216,17 @@
 	}
 
 	.nav__list {
+		--logo: calc(48px + 32px);
+		--list-title: calc(17px + 16px);
+		--create-btn: 50px;
+		--footer: 148px;
+
+		display: block;
+		max-height: calc(
+			100vh - var(--padding) - var(--logo) - var(--list-title) - var(--create-btn) - var(--footer)
+		);
 		padding-right: 2rem;
+		overflow-y: auto;
 	}
 
 	.nav__label {

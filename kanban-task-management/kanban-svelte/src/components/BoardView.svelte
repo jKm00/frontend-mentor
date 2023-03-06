@@ -4,9 +4,11 @@
 	import Modal from './Modal.svelte';
 	import TaskDetails from './TaskDetails.svelte';
 	import boards from '@/stores/boards';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher<{ create: {}; delete: {} }>();
 
 	export let boardId: number;
-
 	$: board = $boards.find((b) => b.id === boardId);
 
 	let showModal = false;
@@ -26,17 +28,24 @@
 	const handleDelete = () => {
 		$boards = $boards.filter((b) => b.id !== boardId);
 		titleHover = false;
+		dispatch('delete', {});
 	};
 
 	const handleItemClick = (task: Task) => {
 		selectedTask = task;
 		showModal = true;
 	};
+
+	const dispatchCreateEvent = () => {
+		dispatch('create', {});
+	};
 </script>
 
 {#if board}
+	<!-- Default board view -->
 	<header class="header">
 		{#if editTitle}
+			<!-- Form for editing board title -->
 			<form class="flex-grow" on:submit|preventDefault={handleNameChange}>
 				<input type="text" class="input" bind:value={board.name} />
 				<button class="btn btn--small">Save</button>
@@ -49,6 +58,7 @@
 			>
 				{board.name.length > 79 ? board.name.substring(0, 80) + '\u2026' : board.name}
 				{#if titleHover}
+					<!-- Show board options when hovering title -->
 					<div class="btn-group">
 						<button on:click={() => (editTitle = true)}>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -70,6 +80,7 @@
 		{/if}
 		<button class="btn">+ Add New Task</button>
 	</header>
+	<!-- Lists -->
 	<section class="content">
 		{#each board.lists as list}
 			<div class="list">
@@ -92,15 +103,17 @@
 			</div>
 		{/each}
 	</section>
+	<!-- Modal for task details -->
 	<Modal bind:showModal>
 		<TaskDetails task={selectedTask} availableStatus={board.lists.map((l) => l.name)} />
 	</Modal>
 {:else}
+	<!-- Show placeholder if there are no boards to show -->
 	<div class="placeholder-section">
 		<p class="placeholder">
 			No boards to show... Create your first to start tracking your projects!
 		</p>
-		<button class="btn">+ Create New Board</button>
+		<button class="btn" on:click={dispatchCreateEvent}>+ Create New Board</button>
 	</div>
 {/if}
 
