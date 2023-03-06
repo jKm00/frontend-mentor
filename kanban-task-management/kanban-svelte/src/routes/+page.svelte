@@ -2,8 +2,11 @@
 	import type { Board } from '@/models/Board';
 	import ThemeToggler from '@/components/ThemeToggler.svelte';
 	import BoardView from '@/components/BoardView.svelte';
+	import boards from '@/stores/boards';
+	import Modal from '@/components/Modal.svelte';
+	import CreateNewBoard from '@/components/CreateNewBoard.svelte';
 
-	const boards: Board[] = [
+	const tmp: Board[] = [
 		{
 			id: 0,
 			name: 'Platform Launch',
@@ -47,6 +50,29 @@
 							name: 'Design settings and search pages',
 							desc: '...',
 							status: 'doing'
+						},
+						{
+							id: 5,
+							name: 'Research pricing points of varous competitors and trial different business models',
+							desc: "We know what we're planning to build for version one. Now we need to finialise the first pricing model we'll use. Keep iteration the subtasks until we have coherent proposition.",
+							subtasks: [
+								{
+									id: 6,
+									name: 'Research competition pricing and business models',
+									completed: true
+								},
+								{
+									id: 7,
+									name: 'Outline a business model that works for our solution',
+									completed: true
+								},
+								{
+									id: 8,
+									name: 'Talk to potential customers about or proposed solution and ask for fair price expectancy',
+									completed: false
+								}
+							],
+							status: 'Doing'
 						}
 					]
 				},
@@ -71,25 +97,61 @@
 		}
 	];
 
-	let activeBoard = boards[0] ?? null;
+	let activeBoard = $boards[0] ? $boards[0].id : 0;
+
+	let showCreateNewBoard = false;
+
+	const createBoard = (event: CustomEvent<{ name: string }>) => {
+		const newBoardId = $boards.length;
+
+		$boards = [
+			...$boards,
+			{
+				id: newBoardId,
+				name: event.detail.name,
+				lists: [
+					{
+						name: 'Todo',
+						color: '#4ac3e8',
+						tasks: []
+					},
+					{
+						name: 'Doing',
+						color: '#836ff4',
+						tasks: []
+					},
+					{
+						name: 'Done',
+						color: '#66e0ad',
+						tasks: []
+					}
+				]
+			}
+		];
+
+		activeBoard = newBoardId;
+		showCreateNewBoard = false;
+	};
 </script>
 
 <section class="sidebar">
 	<nav class="nav">
-		<h1 class="logo">kanban</h1>
-		<h2 class="nav__label">All boards ({boards.length})</h2>
+		<h1 class="logo"><img src="./logo.png" alt="logo" />kanban</h1>
+		<h2 class="nav__label">All boards ({$boards.length})</h2>
 		<ul class="nav__list">
-			{#each boards as board}
+			{#each $boards as board}
 				<li class="nav__item">
 					<button
 						class="nav__item__button"
-						on:click={() => (activeBoard = board)}
-						data-active={board.id == activeBoard.id}>{board.name}</button
+						on:click={() => (activeBoard = board.id)}
+						data-active={board.id === activeBoard}>{board.name}</button
 					>
 				</li>
 			{/each}
 		</ul>
-		<button class="nav__button--add">+ Create New Board</button>
+		<button class="btn--text" on:click={() => (showCreateNewBoard = true)}
+			>+ Create New Board</button
+		>
 	</nav>
 	<footer class="footer">
 		<ThemeToggler />
@@ -100,12 +162,18 @@
 				/></svg
 			>Hide Sidebar</button
 		>
-		<p class="legal">&copy; Joakim Edvardsen 2023</p>
+		<div>
+			<p class="legal">&copy; Joakim Edvardsen 2023</p>
+			<p class="legal">Version 0.2</p>
+		</div>
 	</footer>
 </section>
 <main class="main">
-	<BoardView board={activeBoard} />
+	<BoardView boardId={activeBoard} />
 </main>
+<Modal bind:showModal={showCreateNewBoard}>
+	<CreateNewBoard on:create={createBoard} />
+</Modal>
 
 <style scoped>
 	/* Sidebar */
@@ -122,9 +190,16 @@
 	}
 
 	.logo {
+		display: flex;
+		align-items: center;
+
 		font-size: 2rem;
 		padding-inline: var(--padding);
 		margin-bottom: 2rem;
+	}
+
+	.logo img {
+		width: 3rem;
 	}
 
 	/* Nav list */
@@ -170,18 +245,13 @@
 		background-color: var(--clr-accent-bg);
 	}
 
-	.nav__button--add {
-		font-size: var(--fs-body);
-		color: var(--clr-accent-bg);
-
+	.btn--text {
 		padding-block: 1rem;
 		padding-inline: var(--padding);
-
-		cursor: pointer;
 	}
 
-	.nav__button--add:hover,
-	.nav__button--add:focus-visible {
+	.btn--text:hover,
+	.btn--text:focus-visible {
 		color: var(--clr-fg-400);
 	}
 
@@ -219,5 +289,7 @@
 	.main {
 		display: grid;
 		grid-template-rows: auto 1fr;
+
+		background-color: var(--clr-bg);
 	}
 </style>

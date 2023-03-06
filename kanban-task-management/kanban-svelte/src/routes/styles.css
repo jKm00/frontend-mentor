@@ -32,6 +32,9 @@ button {
 
   /* Letter spacing */
   --ls: 0.25rem;
+
+  /* Border radius */
+  --br: 0.2rem;
 }
 
 body {
@@ -63,6 +66,10 @@ body[data-theme="light"] {
   padding: 1em 1.5em;
 }
 
+.btn--small {
+  padding: 0.5rem 1rem;
+}
+
 .btn:hover,
 .btn:focus-visible {
   background-color: var(--clr-accent-bg-dark);
@@ -70,4 +77,51 @@ body[data-theme="light"] {
 
 .btn:active {
   background-color: var(--clr-accent-bg-darker);
+}
+
+.btn--text {
+  font-size: var(--fs-body);
+  color: var(--clr-accent-bg);
+
+  cursor: pointer;
+}
+
+.btn--text:hover,
+.btn--text:focus-visible {
+  color: var(--clr-fg-400);
+}
+
+.card {
+  color: var(--clr-fg-400);
+  background-color: var(--clr-el);
+
+  padding: 2rem;
+}
+
+.placeholder {
+  color: var(--clr-fg-200);
+}
+
+.form {
+  display: grid;
+  gap: 2rem;
+}
+
+.input-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.input-label {
+  font-size: var(--fs-label);
+}
+
+.input {
+  color: var(--clr-fg-400);
+
+  border: 1px solid var(--clr-fg-200);
+  border-radius: var(--br);
+  background-color: transparent;
+
+  padding: 0.5rem 1rem;
 }
