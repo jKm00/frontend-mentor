@@ -102,7 +102,7 @@
 	let showCreateNewBoard = false;
 
 	const createBoard = (event: CustomEvent<{ name: string }>) => {
-		const newBoardId = $boards.length;
+		const newBoardId = $boards.length > 0 ? $boards[$boards.length - 1].id + 1 : 0;
 
 		$boards = [
 			...$boards,
@@ -144,7 +144,8 @@
 					<button
 						class="nav__item__button"
 						on:click={() => (activeBoard = board.id)}
-						data-active={board.id === activeBoard}>{board.name}</button
+						data-active={board.id === activeBoard}
+						>{board.name.length > 26 ? board.name.substring(0, 27) + '\u2026' : board.name}</button
 					>
 				</li>
 			{/each}

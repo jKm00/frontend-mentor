@@ -47,7 +47,7 @@
 				on:mouseenter={() => (titleHover = true)}
 				on:mouseleave={() => (titleHover = false)}
 			>
-				{board.name}
+				{board.name.length > 79 ? board.name.substring(0, 80) + '\u2026' : board.name}
 				{#if titleHover}
 					<div class="btn-group">
 						<button on:click={() => (editTitle = true)}>
@@ -108,6 +108,7 @@
 	/* Header */
 	.header {
 		display: flex;
+		gap: 2rem;
 
 		padding: 1rem 2rem;
 		background-color: var(--clr-el);
