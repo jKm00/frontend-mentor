@@ -134,7 +134,7 @@
 	};
 </script>
 
-<section class="sidebar">
+<aside class="sidebar">
 	<nav class="nav">
 		<h1 class="logo"><img src="./logo.png" alt="logo" />kanban</h1>
 		<h2 class="nav__label">All boards ({$boards.length})</h2>
@@ -167,7 +167,7 @@
 			<p class="legal">Version 0.2</p>
 		</div>
 	</footer>
-</section>
+</aside>
 <main class="main">
 	<BoardView boardId={activeBoard} />
 </main>
