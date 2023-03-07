@@ -5,97 +5,98 @@
 	import boards from '@/stores/boards';
 	import Modal from '@/components/Modal.svelte';
 	import CreateNewBoard from '@/components/CreateNewBoard.svelte';
+	import lists from '@/stores/lists';
 
-	const tmp: Board[] = [
-		{
-			id: 0,
-			name: 'Platform Launch',
-			lists: [
-				{
-					name: 'Todo',
-					color: '#4ac3e8',
-					tasks: [
-						{
-							id: 1,
-							name: 'Build UI for onboardin flow',
-							desc: '...',
-							subtasks: [
-								{
-									id: 2,
-									name: 'subtask 1',
-									completed: false
-								},
-								{
-									id: 3,
-									name: 'subtask 2',
-									completed: false
-								}
-							],
-							status: 'todo'
-						},
-						{
-							id: 4,
-							name: 'Build UI for search',
-							desc: '...',
-							status: 'todo'
-						}
-					]
-				},
-				{
-					name: 'Doing',
-					color: '#836ff4',
-					tasks: [
-						{
-							id: 4,
-							name: 'Design settings and search pages',
-							desc: '...',
-							status: 'doing'
-						},
-						{
-							id: 5,
-							name: 'Research pricing points of varous competitors and trial different business models',
-							desc: "We know what we're planning to build for version one. Now we need to finialise the first pricing model we'll use. Keep iteration the subtasks until we have coherent proposition.",
-							subtasks: [
-								{
-									id: 6,
-									name: 'Research competition pricing and business models',
-									completed: true
-								},
-								{
-									id: 7,
-									name: 'Outline a business model that works for our solution',
-									completed: true
-								},
-								{
-									id: 8,
-									name: 'Talk to potential customers about or proposed solution and ask for fair price expectancy',
-									completed: false
-								}
-							],
-							status: 'Doing'
-						}
-					]
-				},
-				{
-					name: 'Done',
-					color: '#66e0ad',
-					tasks: [
-						{
-							id: 5,
-							name: 'Conduct 5 wireframe tests',
-							desc: '...',
-							status: 'Done'
-						}
-					]
-				}
-			]
-		},
-		{
-			id: 2,
-			name: 'Marketing Plan',
-			lists: []
-		}
-	];
+	// const tmp: Board[] = [
+	// 	{
+	// 		id: 0,
+	// 		name: 'Platform Launch',
+	// 		lists: [
+	// 			{
+	// 				name: 'Todo',
+	// 				color: '#4ac3e8',
+	// 				tasks: [
+	// 					{
+	// 						id: 1,
+	// 						name: 'Build UI for onboardin flow',
+	// 						desc: '...',
+	// 						subtasks: [
+	// 							{
+	// 								id: 2,
+	// 								name: 'subtask 1',
+	// 								completed: false
+	// 							},
+	// 							{
+	// 								id: 3,
+	// 								name: 'subtask 2',
+	// 								completed: false
+	// 							}
+	// 						],
+	// 						status: 'todo'
+	// 					},
+	// 					{
+	// 						id: 4,
+	// 						name: 'Build UI for search',
+	// 						desc: '...',
+	// 						status: 'todo'
+	// 					}
+	// 				]
+	// 			},
+	// 			{
+	// 				name: 'Doing',
+	// 				color: '#836ff4',
+	// 				tasks: [
+	// 					{
+	// 						id: 4,
+	// 						name: 'Design settings and search pages',
+	// 						desc: '...',
+	// 						status: 'doing'
+	// 					},
+	// 					{
+	// 						id: 5,
+	// 						name: 'Research pricing points of varous competitors and trial different business models',
+	// 						desc: "We know what we're planning to build for version one. Now we need to finialise the first pricing model we'll use. Keep iteration the subtasks until we have coherent proposition.",
+	// 						subtasks: [
+	// 							{
+	// 								id: 6,
+	// 								name: 'Research competition pricing and business models',
+	// 								completed: true
+	// 							},
+	// 							{
+	// 								id: 7,
+	// 								name: 'Outline a business model that works for our solution',
+	// 								completed: true
+	// 							},
+	// 							{
+	// 								id: 8,
+	// 								name: 'Talk to potential customers about or proposed solution and ask for fair price expectancy',
+	// 								completed: false
+	// 							}
+	// 						],
+	// 						status: 'Doing'
+	// 					}
+	// 				]
+	// 			},
+	// 			{
+	// 				name: 'Done',
+	// 				color: '#66e0ad',
+	// 				tasks: [
+	// 					{
+	// 						id: 5,
+	// 						name: 'Conduct 5 wireframe tests',
+	// 						desc: '...',
+	// 						status: 'Done'
+	// 					}
+	// 				]
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		name: 'Marketing Plan',
+	// 		lists: []
+	// 	}
+	// ];
 
 	let activeBoard = $boards[0] ? $boards[0].id : 0;
 
@@ -106,30 +107,41 @@
 
 		const newBoardId = $boards.length > 0 ? $boards[$boards.length - 1].id + 1 : 0;
 
-		$boards = [
-			...$boards,
-			{
-				id: newBoardId,
-				name: event.detail.name,
-				lists: [
-					{
-						name: 'Todo',
-						color: '#4ac3e8',
-						tasks: []
-					},
-					{
-						name: 'Doing',
-						color: '#836ff4',
-						tasks: []
-					},
-					{
-						name: 'Done',
-						color: '#66e0ad',
-						tasks: []
-					}
-				]
-			}
-		];
+		boards.update((store) => {
+			return [
+				...store,
+				{
+					id: newBoardId,
+					name: event.detail.name
+				}
+			];
+		});
+
+		const newListId = $lists.length > 0 ? $lists[$lists.length - 1].id + 1 : 0;
+
+		lists.update((store) => {
+			return [
+				...store,
+				{
+					id: newListId,
+					boardId: newBoardId,
+					name: 'Todo',
+					color: '#4ac3e8'
+				},
+				{
+					id: newListId + 1,
+					boardId: newBoardId,
+					name: 'Doing',
+					color: '#836ff4'
+				},
+				{
+					id: newListId + 2,
+					boardId: newBoardId,
+					name: 'Done',
+					color: '#66e0ad'
+				}
+			];
+		});
 
 		activeBoard = newBoardId;
 		showCreateNewBoard = false;

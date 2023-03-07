@@ -4,6 +4,9 @@
 	import Modal from './Modal.svelte';
 	import TaskDetails from './TaskDetails.svelte';
 	import boards from '@/stores/boards';
+	import lists from '@/stores/lists';
+	import tasks from '@/stores/tasks';
+	import subtasks from '@/stores/subtasks';
 	import { createEventDispatcher } from 'svelte';
 	import NewTask from './NewTask.svelte';
 
@@ -16,7 +19,8 @@
 
 	export let boardId: number;
 	$: board = $boards.find((b) => b.id === boardId);
-	$: availableStatus = board ? board.lists.map((l) => l.name) : [];
+	$: _lists = $lists.filter((l) => l.boardId === boardId);
+	$: availableStatus = _lists.map((l) => l.name);
 
 	let showModal = false;
 	let modalType: ModalType;
@@ -96,18 +100,21 @@
 	</header>
 	<!-- Lists -->
 	<section class="content">
-		{#each board.lists as list}
+		{#each _lists as list}
 			<div class="list">
 				<h3 class="list__title">
-					<span class="color-circle" style={`background-color: ${list.color}`} />{list.name} ({list
-						.tasks.length})
+					<span class="color-circle" style={`background-color: ${list.color}`} />{list.name} ({$tasks.filter(
+						(t) => t.listId === list.id
+					).length})
 				</h3>
-				{#each list.tasks as task}
+				{#each $tasks.filter((t) => t.listId === list.id) as task}
 					<button class="item" on:click={() => handleItemClick(task)}>
 						<h4 class="item__title">{task.name}</h4>
 						<p class="item__label">
-							{#if task.subtasks}
-								{task.subtasks?.filter((s) => s.completed).length} of {task.subtasks?.length} subtasks
+							{#if $subtasks.filter((s) => s.taskId === task.id).length > 0}
+								{$subtasks.filter((s) => s.taskId === task.id && s.completed).length} of {$subtasks.filter(
+									(s) => s.taskId === task.id
+								).length} subtasks
 							{:else}
 								0 subtasks
 							{/if}
@@ -122,7 +129,7 @@
 		{#if modalType === ModalType.TaskDetails}
 			<TaskDetails task={selectedTask} {availableStatus} />
 		{:else}
-			<NewTask currentBoardId={board.id} {availableStatus} />
+			<NewTask boardId={board.id} {availableStatus} on:create={() => (showModal = false)} />
 		{/if}
 	</Modal>
 {:else}
