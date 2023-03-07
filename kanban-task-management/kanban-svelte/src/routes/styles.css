@@ -55,6 +55,13 @@ body[data-theme="light"] {
   --clr-el: #fff;
 }
 
+textarea {
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 1.75rem;
+  resize: vertical;
+  max-height: 30vh;
+}
+
 
 /* Elements */
 
@@ -64,6 +71,8 @@ body[data-theme="light"] {
   background-color: var(--clr-accent-bg);
   border-radius: 100vh;
   padding: 1em 1.5em;
+
+  transition: background-color 100ms ease-in-out, color 100ms ease-in-out;
 }
 
 .btn--small {
@@ -89,6 +98,16 @@ body[data-theme="light"] {
 .btn--text:hover,
 .btn--text:focus-visible {
   color: var(--clr-fg-400);
+}
+
+.btn--secondary {
+  color: var(--clr-accent-bg);
+  background-color: var(--clr-fg-400);
+}
+
+.btn--secondary:hover,
+.btn--secondary:focus-visible {
+  color: var(--clr-accent-fg);
 }
 
 .card {
@@ -124,4 +143,8 @@ body[data-theme="light"] {
   background-color: transparent;
 
   padding: 0.5rem 1rem;
+}
+
+.input option {
+  background-color: var(--clr-el);
 }

@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
 import type { Board } from "@/models/Board";
+import type { Task } from "@/models/Task";
 import { writable } from "svelte/store";
 
 const storedValue = browser ? window.localStorage.getItem('boards') : "[]"

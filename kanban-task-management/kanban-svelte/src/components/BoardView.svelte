@@ -5,13 +5,21 @@
 	import TaskDetails from './TaskDetails.svelte';
 	import boards from '@/stores/boards';
 	import { createEventDispatcher } from 'svelte';
+	import NewTask from './NewTask.svelte';
+
+	enum ModalType {
+		TaskDetails,
+		NewTask
+	}
 
 	const dispatch = createEventDispatcher<{ create: {}; delete: {} }>();
 
 	export let boardId: number;
 	$: board = $boards.find((b) => b.id === boardId);
+	$: availableStatus = board ? board.lists.map((l) => l.name) : [];
 
 	let showModal = false;
+	let modalType: ModalType;
 	let selectedTask: Task;
 
 	let titleHover = false;
@@ -31,7 +39,13 @@
 		dispatch('delete', {});
 	};
 
+	const showNewTask = () => {
+		modalType = ModalType.NewTask;
+		showModal = true;
+	};
+
 	const handleItemClick = (task: Task) => {
+		modalType = ModalType.TaskDetails;
 		selectedTask = task;
 		showModal = true;
 	};
@@ -78,7 +92,7 @@
 				{/if}
 			</h2>
 		{/if}
-		<button class="btn">+ Add New Task</button>
+		<button class="btn" on:click={showNewTask}>+ Add New Task</button>
 	</header>
 	<!-- Lists -->
 	<section class="content">
@@ -105,7 +119,11 @@
 	</section>
 	<!-- Modal for task details -->
 	<Modal bind:showModal>
-		<TaskDetails task={selectedTask} availableStatus={board.lists.map((l) => l.name)} />
+		{#if modalType === ModalType.TaskDetails}
+			<TaskDetails task={selectedTask} {availableStatus} />
+		{:else}
+			<NewTask currentBoardId={board.id} {availableStatus} />
+		{/if}
 	</Modal>
 {:else}
 	<!-- Show placeholder if there are no boards to show -->
