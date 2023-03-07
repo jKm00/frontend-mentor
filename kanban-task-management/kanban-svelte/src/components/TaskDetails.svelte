@@ -1,24 +1,38 @@
 <script lang="ts">
+	import type { Subtask } from '@/models/Subtask';
 	import type { Task } from '@/models/Task';
+	import subtasks from '@/stores/subtasks';
 
-	export let task: Task | undefined;
+	export let task: Task;
 	export let availableStatus: string[];
+
+	const toggleSubtask = (subtask: Subtask) => {
+		subtasks.update((store) => {
+			const updatedSubtask = { ...subtask, completed: !subtask.completed };
+			return store;
+		});
+	};
+
+	$: console.log($subtasks.filter((s) => s.taskId === task.id));
 </script>
 
 <div class="card">
 	<h2 class="title">{task?.name}</h2>
 	<p class="desc">{task?.desc}</p>
-	{#if task?.subtasks}
+	{#if $subtasks.find((s) => s.taskId === task.id)}
 		<section class="section">
 			<h3 class="title--small">
-				Subtasks ({task.subtasks.filter((s) => s.completed).length} of {task.subtasks.length})
+				Subtasks ({$subtasks.filter((s) => s.taskId === task.id && s.completed).length} of {$subtasks.filter(
+					(s) => s.taskId === task.id
+				).length})
 			</h3>
-			{#each task.subtasks as subtask}
+			{#each $subtasks.filter((s) => s.taskId === task.id) as subtask}
 				<div class="subtask">
 					<input
 						id={`${subtask.id}`}
 						type="checkbox"
 						bind:checked={subtask.completed}
+						on:change={() => toggleSubtask(subtask)}
 						class="subtask__checkbox"
 					/>
 					<label for={`${subtask.id}`} data-checked={subtask.completed}>{subtask.name}</label>
@@ -28,7 +42,7 @@
 	{/if}
 	<section class="section">
 		<h3 class="title--small">Status</h3>
-		<select name="status">
+		<select name="status" class="input">
 			{#each availableStatus as option}
 				<option value={option}>{option}</option>
 			{/each}

@@ -1,18 +1,25 @@
 <script lang="ts">
 	import type { Subtask } from '@/models/Subtask';
-	import boards from '@/stores/boards';
-	import { get } from 'svelte/store';
+	import tasks from '@/stores/tasks';
+	import lists from '@/stores/lists';
+	import subtasks from '@/stores/subtasks';
+	import { createEventDispatcher } from 'svelte';
 
 	const subtaskPlaceholders = ['e.g. Make coffe', 'e.g. Drink coffe & smile'];
 
-	export let currentBoardId: number;
+	const dispatch = createEventDispatcher<{ create: {} }>();
+
+	export let boardId: number;
 	export let availableStatus: string[];
+
+	const newTaskId = $tasks.length > 0 ? $tasks[$tasks.length - 1].id + 1 : 0;
 
 	let title = '';
 	let desc = '';
-	let subtasks: Subtask[] = [
+	let _subtasks: Subtask[] = [
 		{
 			id: 0,
+			taskId: newTaskId,
 			name: '',
 			completed: false
 		}
@@ -20,16 +27,20 @@
 	let status: string;
 
 	const removeSubtask = (id: number) => {
-		subtasks = subtasks.filter((s) => s.id !== id);
+		_subtasks = _subtasks.filter((s) => s.id !== id);
 	};
 
 	const addSubtask = () => {
-		const newId = subtasks.length > 0 ? subtasks[subtasks.length - 1].id + 1 : 0;
+		const newId =
+			$subtasks.length > 0
+				? $subtasks[$subtasks.length - 1].id + 1 + _subtasks.length
+				: _subtasks.length;
 
-		subtasks = [
-			...subtasks,
+		_subtasks = [
+			..._subtasks,
 			{
 				id: newId,
+				taskId: newTaskId,
 				name: '',
 				completed: false
 			}
@@ -38,11 +49,61 @@
 
 	const handleSubmit = () => {
 		if (title.length === 0) return;
+
+		const listId = $lists.find((l) => l.boardId === boardId && l.name === status)?.id;
+		if (listId === undefined) return;
+
+		const newTaskId = $tasks.length > 0 ? $tasks[$tasks.length - 1].id + 1 : 0;
+
+		// Create new task
+		tasks.update((store) => {
+			return [
+				...store,
+				{
+					id: newTaskId,
+					listId: listId,
+					name: title,
+					desc: desc,
+					status: status
+				}
+			];
+		});
+
+		// Create all the subtasks
+		_subtasks
+			.filter((s) => s.name !== '')
+			.forEach((s) => {
+				subtasks.update((store) => {
+					return [
+						...store,
+						{
+							id: s.id,
+							taskId: newTaskId,
+							name: s.name,
+							completed: s.completed
+						}
+					];
+				});
+			});
+
+		// Reset subtasks
+		_subtasks = [
+			{
+				id: 0,
+				taskId: newTaskId,
+				name: '',
+				completed: false
+			}
+		];
+
+		dispatch('create', {});
 	};
+
+	$: console.log($tasks, $subtasks);
 </script>
 
 <div class="card">
-	<h2>Add New Task</h2>
+	<h2 class="title">Add New Task</h2>
 	<form class="form" on:submit|preventDefault={handleSubmit}>
 		<div class="input-group">
 			<label for="task-title" class="input-label">Title</label>
@@ -65,7 +126,7 @@
 		</div>
 		<div class="input-group">
 			<p class="input-label">Subtasks</p>
-			{#each subtasks as subtask, i}
+			{#each _subtasks as subtask, i}
 				<div class="subtask--wrapper">
 					<input
 						bind:value={subtask.name}
@@ -103,6 +164,10 @@
 <style scoped>
 	.card {
 		width: 32rem;
+	}
+
+	.title {
+		margin-bottom: 1rem;
 	}
 
 	.subtask--wrapper {
