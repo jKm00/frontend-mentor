@@ -54,6 +54,29 @@
 		showModal = true;
 	};
 
+	const changeTaskStatus = (task: Task, status: string) => {
+		tasks.update((store) => {
+			const taskIndex = store.findIndex((t) => t === task);
+			const newListId = _lists.find((l) => l.name === status)?.id;
+			if (newListId === undefined) return store;
+
+			const updatedTask = {
+				...task,
+				listId: newListId,
+				status: status
+			};
+			const updatedTaskList = [
+				...store.splice(0, taskIndex),
+				updatedTask,
+				...store.splice(taskIndex + 1)
+			];
+
+			selectedTask = updatedTask;
+
+			return updatedTaskList;
+		});
+	};
+
 	const dispatchCreateEvent = () => {
 		dispatch('create', {});
 	};
@@ -127,7 +150,11 @@
 	<!-- Modal for task details -->
 	<Modal bind:showModal>
 		{#if modalType === ModalType.TaskDetails}
-			<TaskDetails task={selectedTask} {availableStatus} />
+			<TaskDetails
+				task={selectedTask}
+				{availableStatus}
+				on:change={(event) => changeTaskStatus(selectedTask, event.detail.status)}
+			/>
 		{:else}
 			<NewTask boardId={board.id} {availableStatus} on:create={() => (showModal = false)} />
 		{/if}
