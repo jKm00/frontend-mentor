@@ -2,9 +2,14 @@
 	import type { Subtask } from '@/models/Subtask';
 	import type { Task } from '@/models/Task';
 	import subtasks from '@/stores/subtasks';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher<{ change: { status: string } }>();
 
 	export let task: Task;
 	export let availableStatus: string[];
+
+	let status: string;
 
 	const toggleSubtask = (subtask: Subtask) => {
 		subtasks.update((store) => {
@@ -13,7 +18,11 @@
 		});
 	};
 
-	$: console.log($subtasks.filter((s) => s.taskId === task.id));
+	const handleStatusChange = () => {
+		dispatch('change', {
+			status: status
+		});
+	};
 </script>
 
 <div class="card">
@@ -42,7 +51,7 @@
 	{/if}
 	<section class="section">
 		<h3 class="title--small">Status</h3>
-		<select name="status" class="input">
+		<select name="status" class="input" bind:value={status} on:change={handleStatusChange}>
 			{#each availableStatus as option}
 				<option value={option}>{option}</option>
 			{/each}

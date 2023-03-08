@@ -5,7 +5,29 @@
 	import subtasks from '@/stores/subtasks';
 	import { createEventDispatcher } from 'svelte';
 
-	const subtaskPlaceholders = ['e.g. Make coffe', 'e.g. Drink coffe & smile'];
+	let subtaskPlaceholders = [
+		'e.g. Make coffe',
+		'e.g. Drink coffe & smile',
+		'e.g. Wash dishes',
+		'e.g. Walk the dog',
+		'e.g. Call Mom',
+		'e.g. Clean the bathroom',
+		'e.g. Schedule appointment',
+		'e.g. Read a book',
+		'e.g. Make dinner',
+		'e.g. Take out the trash',
+		'e.g. Do laundry',
+		'e.g. Water plants',
+		'e.g. Fix leaky faucet',
+		'e.g. Build a birdhouse',
+		'e.g. Practice guitar for 1 hour',
+		'e.g. Draft an outline for the report',
+		'e.g. Design a logo and branding materials',
+		'e.g. Write test cases and scenarios',
+		'e.g. Create a project timeline and milestones',
+		'e.g. Analyze data and metrics',
+		'e.g. Set up a system for task tracking and progress reporting'
+	];
 
 	const dispatch = createEventDispatcher<{ create: {} }>();
 
@@ -25,6 +47,13 @@
 		}
 	];
 	let status: string;
+
+	const getRandomPlaceholder = (): string => {
+		const index = Math.floor(Math.random() * subtaskPlaceholders.length);
+		const placeholder = subtaskPlaceholders[index];
+		subtaskPlaceholders = subtaskPlaceholders.filter((p) => p !== placeholder);
+		return placeholder;
+	};
 
 	const removeSubtask = (id: number) => {
 		_subtasks = _subtasks.filter((s) => s.id !== id);
@@ -98,8 +127,6 @@
 
 		dispatch('create', {});
 	};
-
-	$: console.log($tasks, $subtasks);
 </script>
 
 <div class="card">
@@ -132,9 +159,7 @@
 						bind:value={subtask.name}
 						type="text"
 						class="input"
-						placeholder={i < subtaskPlaceholders.length
-							? subtaskPlaceholders[i]
-							: subtaskPlaceholders[subtaskPlaceholders.length - 1]}
+						placeholder={getRandomPlaceholder()}
 					/>
 					<button on:click={() => removeSubtask(subtask.id)} class="delete" type="button"
 						><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
