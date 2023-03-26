@@ -62,7 +62,7 @@
 		).length})
 	</h3>
 	<div class="task-wrapper">
-		{#each $tasks.filter((t) => t.listId === list.id) as task, taskIndex}
+		{#each $tasks.filter((t) => t.listId === list.id) as task}
 			<button class="item" on:click={() => handleItemClick(task)}>
 				<h4 class="item__title">{task.name}</h4>
 				<p class="item__label">
