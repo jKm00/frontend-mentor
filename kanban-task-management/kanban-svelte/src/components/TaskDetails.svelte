@@ -26,37 +26,41 @@
 </script>
 
 <div class="card">
-	<h2 class="title">{task?.name}</h2>
-	<p class="desc">{task?.desc}</p>
-	{#if $subtasks.find((s) => s.taskId === task.id)}
+	{#if task === undefined}
+		<p>No task selected</p>
+	{:else}
+		<h2 class="title">{task.name}</h2>
+		<p class="desc">{task.desc}</p>
+		{#if $subtasks.find((s) => s.taskId === task.id)}
+			<section class="section">
+				<h3 class="title--small">
+					Subtasks ({$subtasks.filter((s) => s.taskId === task.id && s.completed).length} of {$subtasks.filter(
+						(s) => s.taskId === task.id
+					).length})
+				</h3>
+				{#each $subtasks.filter((s) => s.taskId === task.id) as subtask}
+					<div class="subtask">
+						<input
+							id={`${subtask.id}`}
+							type="checkbox"
+							bind:checked={subtask.completed}
+							on:change={() => toggleSubtask(subtask)}
+							class="subtask__checkbox"
+						/>
+						<label for={`${subtask.id}`} data-checked={subtask.completed}>{subtask.name}</label>
+					</div>
+				{/each}
+			</section>
+		{/if}
 		<section class="section">
-			<h3 class="title--small">
-				Subtasks ({$subtasks.filter((s) => s.taskId === task.id && s.completed).length} of {$subtasks.filter(
-					(s) => s.taskId === task.id
-				).length})
-			</h3>
-			{#each $subtasks.filter((s) => s.taskId === task.id) as subtask}
-				<div class="subtask">
-					<input
-						id={`${subtask.id}`}
-						type="checkbox"
-						bind:checked={subtask.completed}
-						on:change={() => toggleSubtask(subtask)}
-						class="subtask__checkbox"
-					/>
-					<label for={`${subtask.id}`} data-checked={subtask.completed}>{subtask.name}</label>
-				</div>
-			{/each}
+			<h3 class="title--small">Status</h3>
+			<select name="status" class="input" bind:value={status} on:change={handleStatusChange}>
+				{#each availableStatus as option}
+					<option value={option}>{option}</option>
+				{/each}
+			</select>
 		</section>
 	{/if}
-	<section class="section">
-		<h3 class="title--small">Status</h3>
-		<select name="status" class="input" bind:value={status} on:change={handleStatusChange}>
-			{#each availableStatus as option}
-				<option value={option}>{option}</option>
-			{/each}
-		</select>
-	</section>
 </div>
 
 <style scoped>

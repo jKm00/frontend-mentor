@@ -115,7 +115,9 @@
 				});
 			});
 
-		// Reset subtasks
+		// Reset all fields
+		title = '';
+		desc = '';
 		_subtasks = [
 			{
 				id: 0,
@@ -124,6 +126,7 @@
 				completed: false
 			}
 		];
+		status = availableStatus[0];
 
 		dispatch('create', {});
 	};

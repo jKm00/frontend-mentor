@@ -1,19 +1,11 @@
 <script lang="ts">
-	import type { Board } from '@/models/Board';
 	import type { Task } from '@/models/Task';
 	import Modal from './Modal.svelte';
-	import TaskDetails from './TaskDetails.svelte';
 	import boards from '@/stores/boards';
 	import lists from '@/stores/lists';
-	import tasks from '@/stores/tasks';
-	import subtasks from '@/stores/subtasks';
 	import { createEventDispatcher } from 'svelte';
 	import NewTask from './NewTask.svelte';
-
-	enum ModalType {
-		TaskDetails,
-		NewTask
-	}
+	import List from '@/components/List.svelte';
 
 	const dispatch = createEventDispatcher<{ create: {}; delete: {} }>();
 
@@ -22,13 +14,16 @@
 	$: _lists = $lists.filter((l) => l.boardId === boardId);
 	$: availableStatus = _lists.map((l) => l.name);
 
-	let showModal = false;
-	let modalType: ModalType;
 	let selectedTask: Task;
 
 	let titleHover = false;
 	let editTitle = false;
 
+	let showModal = false;
+
+	/**
+	 * Changes the name of the bord
+	 */
 	const handleNameChange = () => {
 		if (board !== undefined) {
 			$boards[boardId].name = board?.name;
@@ -37,44 +32,20 @@
 		titleHover = false;
 	};
 
+	/**
+	 * Deletes the bord
+	 */
 	const handleDelete = () => {
 		$boards = $boards.filter((b) => b.id !== boardId);
 		titleHover = false;
 		dispatch('delete', {});
 	};
 
+	/**
+	 * Shows new task form
+	 */
 	const showNewTask = () => {
-		modalType = ModalType.NewTask;
 		showModal = true;
-	};
-
-	const handleItemClick = (task: Task) => {
-		modalType = ModalType.TaskDetails;
-		selectedTask = task;
-		showModal = true;
-	};
-
-	const changeTaskStatus = (task: Task, status: string) => {
-		tasks.update((store) => {
-			const taskIndex = store.findIndex((t) => t === task);
-			const newListId = _lists.find((l) => l.name === status)?.id;
-			if (newListId === undefined) return store;
-
-			const updatedTask = {
-				...task,
-				listId: newListId,
-				status: status
-			};
-			const updatedTaskList = [
-				...store.splice(0, taskIndex),
-				updatedTask,
-				...store.splice(taskIndex + 1)
-			];
-
-			selectedTask = updatedTask;
-
-			return updatedTaskList;
-		});
 	};
 
 	const dispatchCreateEvent = () => {
@@ -124,40 +95,12 @@
 	<!-- Lists -->
 	<section class="content">
 		{#each _lists as list}
-			<div class="list">
-				<h3 class="list__title">
-					<span class="color-circle" style={`background-color: ${list.color}`} />{list.name} ({$tasks.filter(
-						(t) => t.listId === list.id
-					).length})
-				</h3>
-				{#each $tasks.filter((t) => t.listId === list.id) as task}
-					<button class="item" on:click={() => handleItemClick(task)}>
-						<h4 class="item__title">{task.name}</h4>
-						<p class="item__label">
-							{#if $subtasks.filter((s) => s.taskId === task.id).length > 0}
-								{$subtasks.filter((s) => s.taskId === task.id && s.completed).length} of {$subtasks.filter(
-									(s) => s.taskId === task.id
-								).length} subtasks
-							{:else}
-								0 subtasks
-							{/if}
-						</p>
-					</button>
-				{/each}
-			</div>
+			<List lists={$lists.filter((l) => l.boardId === boardId)} {list} {availableStatus} />
 		{/each}
 	</section>
 	<!-- Modal for task details -->
 	<Modal bind:showModal>
-		{#if modalType === ModalType.TaskDetails}
-			<TaskDetails
-				task={selectedTask}
-				{availableStatus}
-				on:change={(event) => changeTaskStatus(selectedTask, event.detail.status)}
-			/>
-		{:else}
-			<NewTask boardId={board.id} {availableStatus} on:create={() => (showModal = false)} />
-		{/if}
+		<NewTask boardId={board.id} {availableStatus} on:create={() => (showModal = false)} />
 	</Modal>
 {:else}
 	<!-- Show placeholder if there are no boards to show -->
@@ -212,61 +155,6 @@
 		padding: 2rem;
 
 		overflow-x: auto;
-	}
-
-	/* List */
-	.list {
-		flex-basis: 20rem;
-		flex-shrink: 0;
-	}
-
-	.list__title {
-		display: flex;
-		gap: 0.5rem;
-
-		font-size: var(--fs-label-big);
-		color: var(--clr-fg-200);
-		text-transform: uppercase;
-		letter-spacing: var(--ls);
-
-		margin-bottom: 1rem;
-	}
-
-	.color-circle {
-		display: block;
-		width: 1rem;
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-		background-color: #fff;
-	}
-
-	/* Item */
-	.item {
-		display: grid;
-		gap: 0.25rem;
-
-		text-align: left;
-
-		background-color: var(--clr-el);
-		padding: 1.5rem 1rem;
-		width: 100%;
-
-		border-radius: 0.25rem;
-
-		cursor: pointer;
-	}
-
-	.item:not(:last-child) {
-		margin-bottom: 1rem;
-	}
-
-	.item__title {
-		font-size: var(--fs-body);
-	}
-
-	.item__label {
-		font-size: var(--fs-label);
-		color: var(--clr-fg-200);
 	}
 
 	/* Placeholder section */

@@ -7,6 +7,7 @@ specifiers:
   prettier-plugin-svelte: ^2.8.1
   svelte: ^3.54.0
   svelte-check: ^3.0.1
+  svelte-dnd-action: ^0.9.22
   tslib: ^2.4.1
   typescript: ^4.9.3
   vite: ^4.0.0
@@ -18,6 +19,7 @@ devDependencies:
   prettier-plugin-svelte: 2.9.0_jrsxveqmsx2uadbqiuq74wlc4u
   svelte: 3.55.1
   svelte-check: 3.0.4_svelte@3.55.1
+  svelte-dnd-action: 0.9.22_svelte@3.55.1
   tslib: 2.5.0
   typescript: 4.9.5
   vite: 4.1.4
@@ -898,6 +900,14 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-dnd-action/0.9.22_svelte@3.55.1:
+    resolution: {integrity: sha512-lOQJsNLM1QWv5mdxIkCVtk6k4lHCtLgfE59y8rs7iOM6erchbLC9hMEFYSveZz7biJV0mpg7yDSs4bj/RT/YkA==}
+    peerDependencies:
+      svelte: '>=3.23.0'
+    dependencies:
+      svelte: 3.55.1
     dev: true
 
   /svelte-hmr/0.15.1_svelte@3.55.1:
