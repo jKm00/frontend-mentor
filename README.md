@@ -1,11 +1,19 @@
-# Fronten Mentor Challenges
+# Kanban Task Management
 
-A repo keeping track of all the challenges I've worked on through <a href="https://www.frontendmentor.io/">frontend mentor</a>
+A kanban board developed with sveltekit. Not all features are yet supported and hence a live preview is not available.
 
-## Completed challenges
+## Local preview
 
-- REST Countries API with color theme switcher, <a target="_blank" href="https://www.frontendmentor.io/challenges/rest-countries-api-with-color-theme-switcher-5cacc469fec04111f7b848ca">Challenge</a>, <a target="_blank" href="https://www.frontendmentor.io/solutions/responsive-themed-country-searcher-XF_EZTHBZo">My solution</a>
+1. Install dependencies:
+```
+pnpm install
+```
 
-## In progress
+2. Run dev server
+```
+pnpm dev
+```
 
-- <a href="https://www.frontendmentor.io/challenges/rest-countries-api-with-color-theme-switcher-5cacc469fec04111f7b848ca">Rest Api Country With Color Themes</a>
+## Disclaimer
+
+This challenge is for pro members only. As I'm not a pro member, I do not have to requirements or specifications for this challenge. However, I have looked at the pictures provided for the overview and have developed the app based on that.
