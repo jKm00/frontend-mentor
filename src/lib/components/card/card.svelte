@@ -6,45 +6,52 @@
 </script>
 
 <div
-	class="card flex flex-col md:flex-row md:items-center gap-4 bg-card relative p-4 pt-0 shadow-lg rounded"
+	class="card flex md:items-center gap-4 bg-card relative shadow-lg rounded p-4 max-md:p-8 max-md:flex-col"
 	style={jobApplication.featured ? '--background-color: hsl(var(--accent))' : ''}
 >
 	<img
-		class="max-md:absolute max-md:-translate-y-1/2 w-14"
+		class="max-md:absolute max-md:-translate-y-[55px] w-14"
 		src={jobApplication.logo}
 		alt={`${jobApplication.company}'s logo`}
 	/>
-	<div class="flex flex-col gap-4 md:gap-1">
-		<div class="flex gap-8 max-md:mt-10">
-			<h1 class="text-accent font-bold">{jobApplication.company}</h1>
-			<div>
-				{#if jobApplication.new}
-					<span class="bg-accent text-accent-foreground rounded-full text-sm py-1 px-2">NEW!</span>
-				{/if}
-				{#if jobApplication.featured}
-					<span class="bg-foreground text-white rounded-full text-sm py-1 px-2">FEATURED</span>
-				{/if}
+	<!-- Body -->
+	<div
+		class="flex-grow flex max-md:flex-col max-md:gap-8 max-md:mt-4 md:items-center justify-between"
+	>
+		<!-- Info -->
+		<div class="flex flex-col max-md:gap-4">
+			<div class="flex gap-4 items-center">
+				<h1 class="text-accent font-bold">{jobApplication.company}</h1>
+				<div class="text-sm">
+					{#if jobApplication.new}
+						<span class="bg-accent text-accent-foreground rounded-full py-1 px-2">NEW!</span>
+					{/if}
+					{#if jobApplication.featured}
+						<span class="bg-foreground text-background rounded-full py-1 px-2">FEATURED</span>
+					{/if}
+				</div>
+			</div>
+			<h2 class="font-bold">{jobApplication.position}</h2>
+			<div class="flex gap-2 text-gray-500">
+				<p>{jobApplication.postedAt}</p>
+				<span>•</span>
+				<p>{jobApplication.contract}</p>
+				<span>•</span>
+				<p>{jobApplication.location}</p>
 			</div>
 		</div>
-		<h2 class="font-bold">{jobApplication.position}</h2>
-		<div class="flex gap-2 text-gray-500">
-			<span class="dot">{jobApplication.postedAt}</span>
-			<span>•</span>
-			<span class="dot">{jobApplication.contract}</span>
-			<span>•</span>
-			<span>{jobApplication.location}</span>
+		<span class="h-[1px] bg-gray-300"></span>
+		<!-- Tags -->
+		<div>
+			<Tag>{jobApplication.role}</Tag>
+			<Tag>{jobApplication.level}</Tag>
+			{#each jobApplication.languages as language}
+				<Tag>{language}</Tag>
+			{/each}
+			{#each jobApplication.tools as tool}
+				<Tag>{tool}</Tag>
+			{/each}
 		</div>
-	</div>
-	<span class="bg-foreground h-[1px] opacity-50 md:hidden"></span>
-	<div class="flex flex-wrap gap-4">
-		<Tag>{jobApplication.role}</Tag>
-		<Tag>{jobApplication.level}</Tag>
-		{#each jobApplication.languages as language}
-			<Tag>{language}</Tag>
-		{/each}
-		{#each jobApplication.tools as tool}
-			<Tag>{tool}</Tag>
-		{/each}
 	</div>
 </div>
 
