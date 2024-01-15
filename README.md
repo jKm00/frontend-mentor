@@ -1,38 +1,55 @@
-# create-svelte
+# Frontend Mentor - Job listings with filtering solution
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This is a solution to the [Job listings with filtering challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/job-listings-with-filtering-ivstIPCt). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-## Creating a project
+## Table of contents
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Frontend Mentor - Job listings with filtering solution](#frontend-mentor---job-listings-with-filtering-solution)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+    - [The challenge](#the-challenge)
+    - [Screenshot](#screenshot)
+    - [Links](#links)
+  - [My process](#my-process)
+    - [Built with](#built-with)
+    - [What I learned](#what-i-learned)
+  - [Author](#author)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+**Note: Delete this note and update the table of contents based on what sections you keep.**
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Overview
 
-## Developing
+### The challenge
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Users should be able to:
 
-```bash
-npm run dev
+- View the optimal layout for the site depending on their device's screen size
+- See hover states for all interactive elements on the page
+- Filter job listings based on the categories
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+### Screenshot
 
-## Building
+![Landing page](./images/screenshot.PNG)
 
-To create a production version of your app:
+### Links
 
-```bash
-npm run build
-```
+- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Live Site URL: [https://clinquant-frangollo-944b39.netlify.app/](https://clinquant-frangollo-944b39.netlify.app/)
 
-You can preview the production build with `npm run preview`.
+## My process
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+### Built with
+
+- SvelteKit
+- Tailwind CSS
+- TDD with vitest
+
+### What I learned
+
+- Getting more familiar with sveltekit and how to do proper fetching with filters saved in the url.
+- Also focused on how to properly test frontend code.
+
+## Author
+
+- Website - [Joakim Edvardsen](https://edvardsen.dev/)
+- Frontend Mentor - [@jKm00](https://www.frontendmentor.io/profile/jKm00)
