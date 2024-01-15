@@ -67,7 +67,7 @@
 		{#if showFilters}
 			<div transition:slide={{ duration: 400 }} class="flex flex-col p-4 pt-0">
 				<span class="block w-full h-[1px] bg-gray-300 mb-4"></span>
-				<div class="flex gap-10">
+				<div class="flex flex-wrap gap-10">
 					<!-- Companies -->
 					<div class="flex flex-col">
 						<h3 class="font-bold">Companies:</h3>
