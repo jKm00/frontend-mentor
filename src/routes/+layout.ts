@@ -1,4 +1,4 @@
-export const load = async () => {
+export const load = async ({ fetch }) => {
 	async function fetchCompanies() {
 		try {
 			const res = await fetch('/api/v1/companies');

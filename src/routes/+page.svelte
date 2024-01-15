@@ -19,13 +19,19 @@
 		class="w-full h-full object-fill md:hidden"
 	/>
 </header>
-<section class="flex flex-col gap-10 p-10">
+<section class="flex flex-col p-10 pt-0">
 	<FilterSection {companies} {roles} {languages} {tools} />
-	{#if jobs && jobs.length > 0}
-		{#each jobs as job}
-			<Card jobApplication={job} />
-		{/each}
-	{:else}
-		<p class="text-center text-sm">No jobs found matching the current filters...</p>
-	{/if}
+	<p class="text-sm mt-6 mb-2 max-md:mb-8">
+		<span class="underline">Result:</span>
+		{jobs?.length}
+	</p>
+	<div class="flex flex-col gap-6">
+		{#if jobs && jobs.length > 0}
+			{#each jobs as job}
+				<Card jobApplication={job} />
+			{/each}
+		{:else}
+			<p class="text-sm md:mt-6">No jobs found matching the current filters...</p>
+		{/if}
+	</div>
 </section>

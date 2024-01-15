@@ -35,12 +35,12 @@ describe('Job Applications', () => {
 	});
 
 	it('Should filter job applications based on language', async () => {
-		let queryString = 'languages=JavaScript';
+		let queryString = 'language=JavaScript';
 		let searchParams = new URLSearchParams(queryString);
 		const result = await GET({ url: { searchParams } });
 		const data = (await result.json()) as JobApplication[];
 
-		queryString = 'languages=JavaScript&languages=Ruby';
+		queryString = 'language=JavaScript&language=Ruby';
 		searchParams = new URLSearchParams(queryString);
 		const result2 = await GET({ url: { searchParams } });
 		const data2 = (await result2.json()) as JobApplication[];
@@ -50,12 +50,12 @@ describe('Job Applications', () => {
 	});
 
 	it('Should filter job applications based on tooles', async () => {
-		let queryString = 'tools=React';
+		let queryString = 'tool=React';
 		let searchParams = new URLSearchParams(queryString);
 		const result = await GET({ url: { searchParams } });
 		const data = (await result.json()) as JobApplication[];
 
-		queryString = 'tools=React&tools=Sass';
+		queryString = 'tool=React&tool=Sass';
 		searchParams = new URLSearchParams(queryString);
 		const result2 = await GET({ url: { searchParams } });
 		const data2 = (await result2.json()) as JobApplication[];

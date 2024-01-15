@@ -23,7 +23,7 @@ export async function GET({ url }) {
 	}
 
 	// Filter by languages
-	let languages = url.searchParams.getAll('languages');
+	let languages = url.searchParams.getAll('language');
 	if (languages.length > 0) {
 		languages = languages.map((language) => language.toLowerCase());
 		filteredData = filteredData.filter((job) => {
@@ -33,7 +33,7 @@ export async function GET({ url }) {
 	}
 
 	// Filter by tools
-	let tools = url.searchParams.getAll('tools');
+	let tools = url.searchParams.getAll('tool');
 	if (tools.length > 0) {
 		tools = tools.map((tool) => tool.toLowerCase());
 		filteredData = filteredData.filter((job) => {
