@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import data from './data.json';
+import data from '../data.json';
 
 export async function GET({ url }) {
 	if (!url) {
@@ -12,7 +12,6 @@ export async function GET({ url }) {
 	let companies = url.searchParams.getAll('company');
 	if (companies.length > 0) {
 		companies = companies.map((company) => company.toLowerCase());
-		console.log(companies);
 		filteredData = data.filter((job) => companies.includes(job.company.toLowerCase()));
 	}
 

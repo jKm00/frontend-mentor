@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { JobApplication } from '$lib/types';
-	import { Tag } from '$lib/components/tag';
+	import { Tag } from '$lib/components/ui/tag';
 
 	export let jobApplication: JobApplication;
 </script>
 
 <div
-	class="card flex md:items-center gap-4 bg-card relative shadow-lg rounded p-6 max-md:p-8 max-md:flex-col"
+	class="card flex md:items-center gap-4 bg-card relative shadow-lg rounded p-6 max-md:p-8 max-md:flex-col hover:scale-[1.02] transition-transform"
 	style={jobApplication.featured ? '--background-color: hsl(var(--accent))' : ''}
 >
 	<img
