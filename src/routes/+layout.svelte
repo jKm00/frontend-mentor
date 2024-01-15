@@ -7,13 +7,15 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
 </svelte:head>
 
-<div class="bg-background">
-	<slot />
-</div>
+<div class="flex flex-col h-screen">
+	<div class="flex-grow">
+		<slot />
+	</div>
 
-<footer class="my-4">
-	<p class="text-sm text-center opacity-75">
-		<a href="https://edvardsen.dev/" class="hover:underline">Joakim Edvardsen</a>
-		&copy; 2024. All rights reserved.
-	</p>
-</footer>
+	<footer class="my-4">
+		<p class="text-sm text-center opacity-75">
+			<a href="https://edvardsen.dev/" class="hover:underline">Joakim Edvardsen</a>
+			&copy; 2024. All rights reserved.
+		</p>
+	</footer>
+</div>

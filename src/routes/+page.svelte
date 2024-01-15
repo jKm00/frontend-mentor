@@ -21,9 +21,11 @@
 </header>
 <section class="flex flex-col gap-10 p-10">
 	<FilterSection {companies} {roles} {languages} {tools} />
-	{#if jobs}
+	{#if jobs && jobs.length > 0}
 		{#each jobs as job}
 			<Card jobApplication={job} />
 		{/each}
+	{:else}
+		<p class="text-center text-sm">No jobs found matching the current filters...</p>
 	{/if}
 </section>
