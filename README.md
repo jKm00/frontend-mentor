@@ -33,7 +33,7 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Solution URL: [https://www.frontendmentor.io/solutions/job-listings-with-sveltekit-0gno6PbJOr](https://www.frontendmentor.io/solutions/job-listings-with-sveltekit-0gno6PbJOr)
 - Live Site URL: [https://clinquant-frangollo-944b39.netlify.app/](https://clinquant-frangollo-944b39.netlify.app/)
 
 ## My process
