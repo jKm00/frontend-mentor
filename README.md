@@ -1,14 +1,38 @@
-# Fronten Mentor Challenges
+# create-svelte
 
-A repo keeping track of all the challenges I've worked on through <a href="https://www.frontendmentor.io/">frontend mentor</a>
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-Each challenge is developed in their own branch. Look below for a list of challenges in progress and completed challenges.
+## Creating a project
 
-## Completed challenges
+If you're seeing this, you've probably already done this step. Congrats!
 
-- Country REST API: [Challenge Description](https://www.frontendmentor.io/challenges/rest-countries-api-with-color-theme-switcher-5cacc469fec04111f7b848ca), [My Solution](https://github.com/jKm00/frontend-mentor/tree/country-challenge), [Live Preview](https://delightful-travesseiro-4097f3.netlify.app/)
-- Rock, Paper, Scissors (Basic): [Challenge Description](https://www.frontendmentor.io/challenges/rock-paper-scissors-game-pTgwgvgH/hub), [My Solution](https://github.com/jKm00/frontend-mentor/tree/rock-paper-scissors), [Live Preview](https://bucolic-belekoy-c3d586.netlify.app/)
+```bash
+# create a new project in the current directory
+npm create svelte@latest
 
-## In progress
+# create a new project in my-app
+npm create svelte@latest my-app
+```
 
-- Kanban Task Management: [Challenge Description](https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB), [My Solution](https://github.com/jKm00/frontend-mentor/tree/kanban-task-management)
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
