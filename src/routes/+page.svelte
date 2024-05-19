@@ -1,5 +1,16 @@
 <script>
-	import { Button } from '$lib/components/ui/button/';
+	import CommentCard from '$lib/components/custom/cards/CommentCard.svelte';
+
+	export let data;
+
+	const { comments } = data;
 </script>
 
-<Button>Hello</Button>
+<section class="grid gap-4">
+	{#each comments as comment}
+		<CommentCard {comment} />
+	{/each}
+</section>
+
+<style>
+</style>
