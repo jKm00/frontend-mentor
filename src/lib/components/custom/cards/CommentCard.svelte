@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { auth } from '$lib/auth';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil } from 'lucide-svelte';
+	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil, Save } from 'lucide-svelte';
+	import { Textarea } from '$lib/components/ui/textarea';
 
 	export let profilePicture: string;
 	export let username: string;
@@ -9,6 +10,14 @@
 	export let content: string;
 	export let score: number;
 	export let replyingTo = '';
+
+	let editing = false;
+
+	function saveComment() {
+		// TODO...
+
+		editing = false;
+	}
 </script>
 
 <article class="grid rounded-lg bg-card p-4">
@@ -17,12 +26,18 @@
 		<p class="font-bold">{username}</p>
 		<span>{createdAt}</span>
 	</div>
-	<p id="body">
-		{#if replyingTo !== ''}
-			<span class="font-bold text-primary">@{replyingTo} </span>
+	<div id="body">
+		{#if editing}
+			<Textarea bind:value={content} class="w-full bg-card" />
+		{:else}
+			<p>
+				{#if replyingTo !== ''}
+					<span class="font-bold text-primary">@{replyingTo} </span>
+				{/if}
+				{content}
+			</p>
 		{/if}
-		{content}
-	</p>
+	</div>
 	<div
 		id="vote"
 		class="flex items-center justify-self-start rounded-lg bg-primary/10 md:flex-col md:self-start"
@@ -36,9 +51,21 @@
 			<Button variant="ghost" class="flex items-center gap-2 font-bold text-destructive"
 				><Trash class="h-4 w-4" />Delete</Button
 			>
-			<Button variant="ghost" class="flex items-center gap-2 font-bold text-primary"
-				><Pencil class="h-4 w-4" />Edit</Button
-			>
+			{#if editing}
+				<Button
+					on:click={() => saveComment()}
+					variant="ghost"
+					class="flex items-center gap-2 font-bold text-primary"
+					><Save class="h-4 w-4" />Save</Button
+				>
+			{:else}
+				<Button
+					on:click={() => (editing = true)}
+					variant="ghost"
+					class="flex items-center gap-2 font-bold text-primary"
+					><Pencil class="h-4 w-4" />Edit</Button
+				>
+			{/if}
 		{:else}
 			<Button variant="ghost" class="flex items-center gap-2 font-bold text-primary">
 				<ReplyIcon class="h-4 w-4" />
