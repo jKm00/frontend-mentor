@@ -1,16 +1,16 @@
-<script>
-	import CommentCard from '$lib/components/custom/cards/CommentCard.svelte';
+<script lang="ts">
+	import AddComment from '$lib/components/custom/AddComment.svelte';
+	import Comment from '$lib/components/custom/Comment.svelte';
 
 	export let data;
 
-	const { comments } = data;
+	const { currentUser, comments } = data;
 </script>
 
-<section class="grid gap-4">
+<section class="mb-4 grid gap-4">
 	{#each comments as comment}
-		<CommentCard {comment} />
+		<Comment {comment} />
 	{/each}
 </section>
 
-<style>
-</style>
+<AddComment {currentUser} />

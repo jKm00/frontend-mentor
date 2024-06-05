@@ -1,99 +1,72 @@
 <script lang="ts">
-	import CommentCard from './CommentCard.svelte';
-	import type { Comment } from '$lib/types';
-	import { Reply as ReplyIcon } from 'lucide-svelte';
-	import { enhance } from '$app/forms';
+	import { Minus, Plus, Reply as ReplyIcon } from 'lucide-svelte';
 
-	export let comment: Comment;
+	export let profilePicture: string;
+	export let username: string;
+	export let createdAt: string;
+	export let content: string;
+	export let score: number;
+	export let replyingTo = '';
 </script>
 
-<div>
-	<!-- Comment card -->
-	<article class="wrapper rounded-lg bg-card p-4">
-		<div class="custom-grid | gap-4">
-			<!-- Header -->
-			<div class="header flex items-center gap-4">
-				<img
-					class="w-10"
-					src={comment.user.image.png}
-					alt="{comment.user.username}'s profile picture"
-				/>
-				<p class="font-bold">{comment.user.username}</p>
-				<span class="text-muted-foreground">{comment.createdAt}</span>
-			</div>
-			<!-- Body -->
-			<p class="body">
-				{#if comment.replyingTo}
-					<span class="font-bold text-accent">@{comment.replyingTo}</span>
-				{/if}
-				{comment.content}
-			</p>
-			<!-- Like/Dislike -->
-			<form
-				class="like flex items-center gap-3 self-start justify-self-start rounded-md bg-background px-4 py-2 font-bold text-accent"
-				method="post"
-				use:enhance
-			>
-				<input type="hidden" name="id" value={comment.id} />
-				<button formaction="?/like">+</button>
-				<span>{comment.score}</span>
-				<button>-</button>
-			</form>
-			<!-- Reply -->
-			<button class="reply flex items-center justify-self-end font-bold text-accent"
-				><ReplyIcon class="mr-2 h-4 w-4" />Reply</button
-			>
-		</div>
-	</article>
-
-	<!-- Replies -->
-	{#if comment.replies && comment.replies.length > 0}
-		<div class="mt-4 grid gap-4 border-l pl-4 md:ml-8 md:pl-8">
-			{#each comment.replies as reply}
-				<CommentCard comment={reply} />
-			{/each}
-		</div>
-	{/if}
-</div>
+<article class="grid rounded-lg bg-card p-4">
+	<div id="header" class="flex items-center gap-4">
+		<img src={profilePicture} alt="{username}'s profile picture" class="h-8 w-8" />
+		<p class="font-bold">{username}</p>
+		<span>{createdAt}</span>
+	</div>
+	<p id="body">
+		{#if replyingTo !== ''}
+			<span class="font-bold text-primary">@{replyingTo} </span>
+		{/if}
+		{content}
+	</p>
+	<div
+		id="vote"
+		class="flex items-center justify-self-start rounded-lg bg-primary/10 md:flex-col md:self-start"
+	>
+		<button class="p-3 font-bold"><Plus class="h-4 w-4 text-primary/50" /></button>
+		<span class="font-bold text-primary">{score}</span>
+		<button class="p-3 font-bold"><Minus class="h-4 w-4 text-primary/50" /></button>
+	</div>
+	<div id="reply" class="flex items-center gap-2 justify-self-end font-bold text-primary">
+		<ReplyIcon class="h-4 w-4" />
+		Reply
+	</div>
+</article>
 
 <style scoped>
-	.wrapper {
-		container-type: inline-size;
-	}
-
-	.custom-grid {
+	.grid {
 		display: grid;
 		grid-template-areas:
 			'header header'
 			'body body'
-			'like reply';
+			'vote reply';
+		gap: 1rem;
 	}
 
-	.header {
+	#header {
 		grid-area: header;
 	}
 
-	.body {
+	#body {
 		grid-area: body;
 	}
 
-	.like {
-		grid-area: like;
+	#vote {
+		grid-area: vote;
 	}
 
-	.reply {
+	#reply {
 		grid-area: reply;
 	}
 
-	@container (min-width: 600px) {
-		.custom-grid {
+	@media only screen and (min-width: 768px) {
+		.grid {
+			grid-template-columns: auto 1fr 1fr;
 			grid-template-areas:
-				'like header reply'
-				'like body body';
-		}
-
-		.like {
-			flex-direction: column;
+				'vote header reply'
+				'vote body body';
 		}
 	}
 </style>

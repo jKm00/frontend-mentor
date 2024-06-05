@@ -8,6 +8,6 @@
 
 <style>
 	.width {
-		width: min(100vw, 50rem);
+		width: min(100%, 50rem);
 	}
 </style>

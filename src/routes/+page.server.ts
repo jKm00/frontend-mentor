@@ -1,29 +1,17 @@
-import { findAll, incrementScore } from '$lib/server/comments';
-import { fail } from '@sveltejs/kit';
+import { comment } from '$lib/server/comments';
+import { currentUser } from '$lib/server/user';
 
 export const load = async () => {
 	function fetchComments() {
-		return findAll();
+		return comment.findAll();
+	}
+
+	function fetchUser() {
+		return currentUser.get();
 	}
 
 	return {
+		currentUser: fetchUser(),
 		comments: fetchComments()
 	};
-};
-
-export const actions = {
-	like: async ({ request }) => {
-		const form = await request.formData();
-		const id = form.get('id');
-
-		if (!id) {
-			return fail(404, {
-				message: 'Comment not found'
-			});
-		}
-
-		incrementScore(Number(id));
-
-		return { success: true };
-	}
 };
