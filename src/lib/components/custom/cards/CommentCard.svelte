@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Minus, Plus, Reply as ReplyIcon } from 'lucide-svelte';
+	import { auth } from '$lib/auth';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil } from 'lucide-svelte';
 
 	export let profilePicture: string;
 	export let username: string;
@@ -29,9 +31,20 @@
 		<span class="font-bold text-primary">{score}</span>
 		<button class="p-3 font-bold"><Minus class="h-4 w-4 text-primary/50" /></button>
 	</div>
-	<div id="reply" class="flex items-center gap-2 justify-self-end font-bold text-primary">
-		<ReplyIcon class="h-4 w-4" />
-		Reply
+	<div id="reply" class="flex justify-self-end">
+		{#if $auth?.username === username}
+			<Button variant="ghost" class="flex items-center gap-2 font-bold text-destructive"
+				><Trash class="h-4 w-4" />Delete</Button
+			>
+			<Button variant="ghost" class="flex items-center gap-2 font-bold text-primary"
+				><Pencil class="h-4 w-4" />Edit</Button
+			>
+		{:else}
+			<Button variant="ghost" class="flex items-center gap-2 font-bold text-primary">
+				<ReplyIcon class="h-4 w-4" />
+				Reply
+			</Button>
+		{/if}
 	</div>
 </article>
 
