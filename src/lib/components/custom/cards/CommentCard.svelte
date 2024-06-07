@@ -76,7 +76,7 @@
 			{/if}
 		{:else}
 			<p>
-				{#if replyingTo !== ''}
+				{#if isReply}
 					<span class="font-bold text-primary">@{replyingTo} </span>
 				{/if}
 				{content}
