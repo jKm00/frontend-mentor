@@ -16,9 +16,9 @@
 	/>
 
 	{#if comment.replies.length > 0}
-		<div class="grid border-l pl-4 md:ml-8 md:pl-8">
+		<div class="mt-4 grid gap-4 border-l pl-4 md:ml-8 md:pl-8">
 			{#each comment.replies as reply}
-				<div class="mt-4">
+				<div>
 					<CommentCard
 						id={reply.id}
 						profilePicture={reply.user.image.png}
