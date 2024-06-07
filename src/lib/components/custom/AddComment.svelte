@@ -2,13 +2,23 @@
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import type { User } from '$lib/types';
 	import { Button } from '$lib/components/ui/button';
+	import { enhance } from '$app/forms';
 
 	export let currentUser: User;
+
+	let comment = '';
+
+	$: disableForm = comment === '';
 </script>
 
-<div class="grid gap-4 rounded-lg bg-card p-4">
+<form method="POST" action="?/add" use:enhance class="grid gap-4 rounded-lg bg-card p-4">
 	<div id="comment">
-		<Textarea placeholder="Add a comment..." class="w-full resize-y bg-card" />
+		<Textarea
+			bind:value={comment}
+			name="comment"
+			placeholder="Add a comment..."
+			class="w-full resize-y bg-card"
+		/>
 	</div>
 	<img
 		src={currentUser.image.png}
@@ -17,9 +27,9 @@
 		class="h-8 w-8"
 	/>
 	<div id="button" class="justify-self-end">
-		<Button class="px-6">SEND</Button>
+		<Button disabled={disableForm} class="px-6" type="submit">SEND</Button>
 	</div>
-</div>
+</form>
 
 <style scoped>
 	.grid {
