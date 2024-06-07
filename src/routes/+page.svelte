@@ -15,10 +15,12 @@
 	}
 </script>
 
-<section class="mb-4 grid gap-4">
-	{#each comments as comment}
-		<Comment {comment} />
-	{/each}
-</section>
+<div class="flex flex-grow flex-col justify-between">
+	<section class="mb-4 grid gap-4">
+		{#each comments as comment}
+			<Comment {comment} />
+		{/each}
+	</section>
 
-<AddComment />
+	<AddComment />
+</div>

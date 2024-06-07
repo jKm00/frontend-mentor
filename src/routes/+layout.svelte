@@ -39,14 +39,16 @@
 
 <Toaster position="top-center" richColors />
 
-<nav class="flex items-center justify-between bg-card p-4">
-	<h1 class="font-bold uppercase">ICS</h1>
-	<form method="POST" action="/logout">
-		<Button type="submit">Log out</Button>
-	</form>
-</nav>
-<div class="width mx-auto p-4">
-	<slot />
+<div class="flex h-screen flex-col">
+	<nav class="flex items-center justify-between bg-card p-4">
+		<h1 class="font-bold uppercase">ICS</h1>
+		<form method="POST" action="/logout">
+			<Button type="submit">Log out</Button>
+		</form>
+	</nav>
+	<div class="width mx-auto flex flex-grow flex-col p-4">
+		<slot />
+	</div>
 </div>
 
 <style>
