@@ -4,6 +4,7 @@
 	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil, Save } from 'lucide-svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { enhance } from '$app/forms';
+	import { fade } from 'svelte/transition';
 
 	export let id: number; // Id of the current comment/reply
 	export let profilePicture: string;
@@ -17,11 +18,16 @@
 	$: isReply = commentId !== null;
 
 	let editing = false;
+	let replying = false;
 
 	function saveComment() {
 		// TODO...
 
 		editing = false;
+	}
+
+	function addReply() {
+		replying = false;
 	}
 </script>
 
@@ -94,13 +100,36 @@
 				>
 			{/if}
 		{:else}
-			<Button variant="ghost" class="flex items-center gap-2 font-bold text-primary">
-				<ReplyIcon class="h-4 w-4" />
-				Reply
+			<Button
+				on:click={() => (replying = !replying)}
+				variant="ghost"
+				class="flex items-center gap-2 font-bold text-primary"
+			>
+				{#if replying}
+					Cancel
+				{:else}
+					<ReplyIcon class="h-4 w-4" />
+					Reply
+				{/if}
 			</Button>
 		{/if}
 	</div>
 </article>
+
+{#if replying}
+	<form
+		transition:fade={{ duration: 150 }}
+		method="POST"
+		action="?/addReply"
+		use:enhance={addReply}
+		class="mt-4 flex flex-col gap-2 rounded-lg bg-card p-4"
+	>
+		<input type="hidden" name="commentId" value={isReply ? commentId : id} />
+		<input type="hidden" name="replyingTo" value={username} />
+		<Textarea name="content" placeholder="Add a reply..." class="resize-y bg-card" />
+		<Button type="submit" class="self-end">Post reply</Button>
+	</form>
+{/if}
 
 <style scoped>
 	.grid {

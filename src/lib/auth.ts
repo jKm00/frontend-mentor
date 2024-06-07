@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
 import type { User } from './types';
-
-const PROFILE_PICTURES = ['juliusomo', 'amyrobson', 'maxblagun', 'ramsesmiron'];
+import { getUserObject } from './helpers';
 
 function initAuth() {
 	const authStore = writable<User | null>(null);
@@ -10,15 +9,7 @@ function initAuth() {
 		if (username === null) {
 			authStore.set(null);
 		} else {
-			const ppIndex = username?.length % PROFILE_PICTURES.length;
-
-			authStore.set({
-				image: {
-					png: `./images/avatars/image-${PROFILE_PICTURES[ppIndex]}.png`,
-					webp: `./images/avatars/image-${PROFILE_PICTURES[ppIndex]}.webp`
-				},
-				username
-			});
+			authStore.set(getUserObject(username));
 		}
 	}
 

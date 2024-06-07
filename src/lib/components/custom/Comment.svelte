@@ -16,18 +16,20 @@
 	/>
 
 	{#if comment.replies.length > 0}
-		<div class="mt-4 grid gap-4 border-l pl-4 md:ml-8 md:pl-8">
+		<div class="grid border-l pl-4 md:ml-8 md:pl-8">
 			{#each comment.replies as reply}
-				<CommentCard
-					id={reply.id}
-					profilePicture={reply.user.image.png}
-					username={reply.user.username}
-					createdAt={reply.createdAt}
-					content={reply.content}
-					score={reply.score}
-					replyingTo={reply.replyingTo}
-					commentId={comment.id}
-				/>
+				<div class="mt-4">
+					<CommentCard
+						id={reply.id}
+						profilePicture={reply.user.image.png}
+						username={reply.user.username}
+						createdAt={reply.createdAt}
+						content={reply.content}
+						score={reply.score}
+						replyingTo={reply.replyingTo}
+						commentId={comment.id}
+					/>
+				</div>
 			{/each}
 		</div>
 	{/if}

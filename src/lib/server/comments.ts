@@ -1,5 +1,6 @@
 import type { User, Comment, Reply } from '$lib/types';
 import user from './data.json';
+import { getNextId } from './utils';
 
 function findAll() {
 	return user.comments;
@@ -12,7 +13,7 @@ function findAll() {
  * @returns updated list of comments
  */
 function add(content: string, author: User) {
-	const id = Math.max(...user.comments.map((c) => c.id)) + 1;
+	const id = getNextId();
 
 	const comment = {
 		id,

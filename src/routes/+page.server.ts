@@ -1,3 +1,4 @@
+import { getUserObject } from '$lib/helpers';
 import { comment } from '$lib/server/comments';
 import { reply } from '$lib/server/reply';
 import type { User } from '$lib/types';
@@ -16,23 +17,25 @@ export const load = async () => {
 
 export const actions: Actions = {
 	addComment: async (event) => {
+		const user = event.cookies.get('user');
+
+		if (!user) {
+			redirect(301, '/login');
+		}
+
+		const userObj = getUserObject(user);
+
 		const form = await event.request.formData();
 		const content = form.get('content') as string;
-		const author = form.get('author') as string;
-
-		if (!author) {
-			redirect('/', { type: 'error', message: 'Author not available, please try again!' }, event);
-		}
 
 		if (!content || content === '') {
 			redirect('/', { type: 'error', message: 'Need to provide a comment!' }, event);
 		}
 
 		try {
-			const authorObj = JSON.parse(author) as User;
-			const allComments = comment.add(content, authorObj);
+			const updatedComments = comment.add(content, userObj);
 
-			return { status: 201, message: 'Comment posted!', data: allComments };
+			return { status: 201, message: 'Comment posted!', data: updatedComments };
 		} catch (err) {
 			redirect('/', { type: 'error', message: 'Author not available, please try again!' }, event);
 		}
@@ -63,6 +66,39 @@ export const actions: Actions = {
 			const updatedComments = comment.deleteComment(Number(id), user);
 
 			return { status: 200, message: 'Comment deleted!', data: updatedComments };
+		} catch (err) {
+			if (err instanceof Error) {
+				redirect('/', { type: 'error', message: err.message }, event);
+			} else {
+				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
+			}
+		}
+	},
+	addReply: async (event) => {
+		const user = event.cookies.get('user');
+
+		if (!user) {
+			redirect(301, '/login');
+		}
+
+		const userObj = getUserObject(user);
+
+		const form = await event.request.formData();
+		const commentId = form.get('commentId') as string;
+		const replyingTo = form.get('replyingTo') as string;
+		const content = form.get('content') as string;
+
+		if (!commentId || !replyingTo || !content) {
+			redirect(
+				'/',
+				{ type: 'error', message: 'Could not post reply... Please try again later' },
+				event
+			);
+		}
+
+		try {
+			const updatedComments = reply.addReply(Number(commentId), replyingTo, content, userObj);
+			return { status: 201, message: 'Reply posted!', data: updatedComments };
 		} catch (err) {
 			if (err instanceof Error) {
 				redirect('/', { type: 'error', message: err.message }, event);

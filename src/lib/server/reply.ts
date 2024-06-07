@@ -1,4 +1,33 @@
+import type { User } from '$lib/types';
 import user from './data.json';
+import { getNextId } from './utils';
+
+/**
+ * Adds a reply to a comment
+ * @param commentId of the comment
+ * @param replyingTo name of the user this reply is replying to
+ * @param content of the reply
+ * @param author that created this reply
+ * @returns updated comments list
+ */
+function addReply(commentId: number, replyingTo: string, content: string, author: User) {
+	const commentIndex = user.comments.findIndex((c) => c.id === commentId);
+
+	if (commentIndex === -1) {
+		throw new Error(`Could not find comment with id: ${commentId}`);
+	}
+
+	user.comments[commentIndex].replies.push({
+		id: getNextId(),
+		content,
+		createdAt: new Date().toDateString(),
+		score: 1,
+		user: author,
+		replyingTo
+	});
+
+	return user.comments;
+}
 
 /**
  * Deletes a reply
@@ -10,7 +39,7 @@ import user from './data.json';
 function deleteReply(replyId: number, commentId: number, username: string) {
 	const commentIndex = user.comments.findIndex((c) => c.id === commentId);
 
-	if (!commentIndex) {
+	if (commentIndex === -1) {
 		throw new Error(`Could not find comment with id: ${commentId}`);
 	}
 
@@ -33,5 +62,6 @@ function deleteReply(replyId: number, commentId: number, username: string) {
 }
 
 export const reply = {
+	addReply,
 	deleteReply
 };
