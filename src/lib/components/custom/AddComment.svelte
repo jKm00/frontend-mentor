@@ -13,7 +13,7 @@
 	$: disableForm = comment === '';
 </script>
 
-<form method="POST" action="?/add" use:enhance class="grid gap-4 rounded-lg bg-card p-4">
+<form method="POST" action="?/addComment" use:enhance class="grid gap-4 rounded-lg bg-card p-4">
 	<input type="hidden" name="author" value={JSON.stringify($auth)} />
 	<div id="comment">
 		<Textarea

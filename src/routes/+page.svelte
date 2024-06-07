@@ -9,9 +9,9 @@
 
 	let { currentUser, comments } = data;
 
-	$: if (form?.status === 201 && form.data) {
+	$: if (form && String(form.status)[0] === '2' && form.data && form.message) {
 		comments = form.data;
-		toast.success('Comment posted!');
+		toast.success(form.message);
 	}
 
 	$: auth.set(currentUser);

@@ -3,7 +3,9 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil, Save } from 'lucide-svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { enhance } from '$app/forms';
 
+	export let id: number;
 	export let profilePicture: string;
 	export let username: string;
 	export let createdAt: string;
@@ -48,9 +50,29 @@
 	</div>
 	<div id="reply" class="flex justify-self-end">
 		{#if $auth?.username === username}
-			<Button variant="ghost" class="flex items-center gap-2 font-bold text-destructive"
-				><Trash class="h-4 w-4" />Delete</Button
-			>
+			{#if replyingTo === ''}
+				<form action="?/deleteComment" method="POST" use:enhance>
+					<input type="hidden" name="id" value={id} />
+					<input type="hidden" name="user" value={$auth?.username} />
+					<Button
+						type="submit"
+						variant="ghost"
+						class="flex items-center gap-2 font-bold text-destructive"
+						><Trash class="h-4 w-4" />Delete</Button
+					>
+				</form>
+			{:else}
+				<form action="?/deleteReply" method="POST" use:enhance>
+					<input type="hidden" name="id" value={id} />
+					<input type="hidden" name="user" value={$auth?.username} />
+					<Button
+						type="submit"
+						variant="ghost"
+						class="flex items-center gap-2 font-bold text-destructive"
+						><Trash class="h-4 w-4" />Delete</Button
+					>
+				</form>
+			{/if}
 			{#if editing}
 				<Button
 					on:click={() => saveComment()}
