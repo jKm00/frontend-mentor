@@ -5,13 +5,16 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { enhance } from '$app/forms';
 
-	export let id: number;
+	export let id: number; // Id of the current comment/reply
 	export let profilePicture: string;
 	export let username: string;
 	export let createdAt: string;
 	export let content: string;
 	export let score: number;
-	export let replyingTo = '';
+	export let replyingTo = ''; // The name of the original comment author if this is a reply
+	export let commentId: number | null = null; // The id of the original comment author if this is a reply
+
+	$: isReply = commentId !== null;
 
 	let editing = false;
 
@@ -30,7 +33,10 @@
 	</div>
 	<div id="body">
 		{#if editing}
-			<Textarea bind:value={content} class="w-full bg-card" />
+			<form>
+				<input type="hidden" name="id" value={id} />
+				<Textarea bind:value={content} class="w-full bg-card" />
+			</form>
 		{:else}
 			<p>
 				{#if replyingTo !== ''}
@@ -50,10 +56,10 @@
 	</div>
 	<div id="reply" class="flex justify-self-end">
 		{#if $auth?.username === username}
-			{#if replyingTo === ''}
-				<form action="?/deleteComment" method="POST" use:enhance>
-					<input type="hidden" name="id" value={id} />
-					<input type="hidden" name="user" value={$auth?.username} />
+			{#if isReply}
+				<form action="?/deleteReply" method="POST" use:enhance>
+					<input type="hidden" name="commentId" value={commentId} />
+					<input type="hidden" name="replyId" value={id} />
 					<Button
 						type="submit"
 						variant="ghost"
@@ -62,9 +68,8 @@
 					>
 				</form>
 			{:else}
-				<form action="?/deleteReply" method="POST" use:enhance>
+				<form action="?/deleteComment" method="POST" use:enhance>
 					<input type="hidden" name="id" value={id} />
-					<input type="hidden" name="user" value={$auth?.username} />
 					<Button
 						type="submit"
 						variant="ghost"

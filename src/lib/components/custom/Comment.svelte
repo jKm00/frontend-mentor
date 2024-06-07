@@ -26,6 +26,7 @@
 					content={reply.content}
 					score={reply.score}
 					replyingTo={reply.replyingTo}
+					commentId={comment.id}
 				/>
 			{/each}
 		</div>

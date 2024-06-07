@@ -1,10 +1,16 @@
-import type { User } from '$lib/types';
+import type { User, Comment, Reply } from '$lib/types';
 import user from './data.json';
 
 function findAll() {
 	return user.comments;
 }
 
+/**
+ * Adds a comment
+ * @param content of the comment to add
+ * @param author the user adding the comment
+ * @returns updated list of comments
+ */
 function add(content: string, author: User) {
 	const id = Math.max(...user.comments.map((c) => c.id)) + 1;
 
@@ -43,6 +49,34 @@ function deleteComment(id: number, username: string) {
 	user.comments = updatedComments;
 
 	return updatedComments;
+}
+
+/**
+ * Returns the comment/reply of the id provided
+ * @param id
+ */
+function find(id: number) {
+	let found: Comment | Reply | null = null;
+	let i = 0;
+	while (found === null && i < user.comments.length) {
+		let j = 0;
+		const currentComment = user.comments[i];
+
+		if (currentComment.id === id) {
+			found = currentComment;
+		}
+
+		while (found === null && j < currentComment.replies.length) {
+			const currentReply = currentComment.replies[j];
+
+			if (currentReply.id === id) {
+				found = currentReply;
+			}
+
+			j++;
+		}
+		i++;
+	}
 }
 
 export const comment = {
