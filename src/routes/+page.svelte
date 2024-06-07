@@ -7,14 +7,12 @@
 	export let data;
 	export let form;
 
-	let { currentUser, comments } = data;
+	let { comments } = data;
 
 	$: if (form && String(form.status)[0] === '2' && form.data && form.message) {
 		comments = form.data;
 		toast.success(form.message);
 	}
-
-	$: auth.set(currentUser);
 </script>
 
 <section class="mb-4 grid gap-4">
@@ -23,4 +21,4 @@
 	{/each}
 </section>
 
-<AddComment {currentUser} />
+<AddComment />

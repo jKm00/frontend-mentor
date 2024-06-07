@@ -1,12 +1,8 @@
 <script lang="ts">
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import type { User } from '$lib/types';
 	import { Button } from '$lib/components/ui/button';
 	import { enhance } from '$app/forms';
 	import { auth } from '$lib/auth';
-	import { goto } from '$app/navigation';
-
-	export let currentUser: User;
 
 	let comment = '';
 
@@ -24,8 +20,8 @@
 		/>
 	</div>
 	<img
-		src={currentUser.image.png}
-		alt="{currentUser.username}'s profile picture"
+		src={$auth?.image.png}
+		alt="{$auth?.username}'s profile picture"
 		id="image"
 		class="h-8 w-8"
 	/>

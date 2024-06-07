@@ -1,5 +1,4 @@
 import { comment } from '$lib/server/comments';
-import { currentUser } from '$lib/server/user';
 import type { User } from '$lib/types';
 import type { Actions } from './$types';
 import { redirect } from 'sveltekit-flash-message/server';
@@ -9,12 +8,7 @@ export const load = async () => {
 		return comment.findAll();
 	}
 
-	function fetchUser() {
-		return currentUser.get();
-	}
-
 	return {
-		currentUser: fetchUser(),
 		comments: fetchComments()
 	};
 };
@@ -32,6 +26,8 @@ export const actions: Actions = {
 		if (!content || content === '') {
 			redirect('/', { type: 'error', message: 'Need to provide a comment!' }, event);
 		}
+
+		console.log(author);
 
 		try {
 			const authorObj = JSON.parse(author) as User;
