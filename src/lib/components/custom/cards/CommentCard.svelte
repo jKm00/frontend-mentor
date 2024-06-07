@@ -20,9 +20,7 @@
 	let editing = false;
 	let replying = false;
 
-	function saveComment() {
-		// TODO...
-
+	function update() {
 		editing = false;
 	}
 
@@ -39,10 +37,43 @@
 	</div>
 	<div id="body">
 		{#if editing}
-			<form>
-				<input type="hidden" name="id" value={id} />
-				<Textarea bind:value={content} class="w-full bg-card" />
-			</form>
+			{#if isReply}
+				<form method="POST" action="?/updateReply" use:enhance={update} class="flex flex-col gap-2">
+					<input type="hidden" name="commentId" value={commentId} />
+					<input type="hidden" name="replyId" value={id} />
+					<Textarea bind:value={content} name="content" class="w-full bg-card" />
+					<div class="flex gap-2 self-end">
+						<Button
+							on:click={() => (editing = false)}
+							variant="ghost"
+							class="font-bold text-primary">Cancel</Button
+						>
+						<Button type="submit" class="flex items-center gap-2 font-bold"
+							><Save class="h-4 w-4" />Save</Button
+						>
+					</div>
+				</form>
+			{:else}
+				<form
+					method="POST"
+					action="?/updateComment"
+					use:enhance={update}
+					class="flex flex-col gap-2"
+				>
+					<input type="hidden" name="id" value={id} />
+					<Textarea bind:value={content} name="content" class="w-full bg-card" />
+					<div class="flex gap-2 self-end">
+						<Button
+							on:click={() => (editing = false)}
+							variant="ghost"
+							class="font-bold text-primary">Cancel</Button
+						>
+						<Button type="submit" class="flex items-center gap-2 font-bold"
+							><Save class="h-4 w-4" />Save</Button
+						>
+					</div>
+				</form>
+			{/if}
 		{:else}
 			<p>
 				{#if replyingTo !== ''}
@@ -52,46 +83,41 @@
 			</p>
 		{/if}
 	</div>
-	<div
-		id="vote"
-		class="flex items-center justify-self-start rounded-lg bg-primary/10 md:flex-col md:self-start"
-	>
-		<button class="p-3 font-bold"><Plus class="h-4 w-4 text-primary/50" /></button>
-		<span class="font-bold text-primary">{score}</span>
-		<button class="p-3 font-bold"><Minus class="h-4 w-4 text-primary/50" /></button>
-	</div>
+	{#if !editing}
+		<div
+			id="vote"
+			class="flex items-center justify-self-start rounded-lg bg-primary/10 md:flex-col md:self-start"
+		>
+			<button class="p-3 font-bold"><Plus class="h-4 w-4 text-primary/50" /></button>
+			<span class="font-bold text-primary">{score}</span>
+			<button class="p-3 font-bold"><Minus class="h-4 w-4 text-primary/50" /></button>
+		</div>
+	{/if}
 	<div id="reply" class="flex justify-self-end">
 		{#if $auth?.username === username}
-			{#if isReply}
-				<form action="?/deleteReply" method="POST" use:enhance>
-					<input type="hidden" name="commentId" value={commentId} />
-					<input type="hidden" name="replyId" value={id} />
-					<Button
-						type="submit"
-						variant="ghost"
-						class="flex items-center gap-2 font-bold text-destructive"
-						><Trash class="h-4 w-4" />Delete</Button
-					>
-				</form>
-			{:else}
-				<form action="?/deleteComment" method="POST" use:enhance>
-					<input type="hidden" name="id" value={id} />
-					<Button
-						type="submit"
-						variant="ghost"
-						class="flex items-center gap-2 font-bold text-destructive"
-						><Trash class="h-4 w-4" />Delete</Button
-					>
-				</form>
-			{/if}
-			{#if editing}
-				<Button
-					on:click={() => saveComment()}
-					variant="ghost"
-					class="flex items-center gap-2 font-bold text-primary"
-					><Save class="h-4 w-4" />Save</Button
-				>
-			{:else}
+			{#if !editing}
+				{#if isReply}
+					<form action="?/deleteReply" method="POST" use:enhance>
+						<input type="hidden" name="commentId" value={commentId} />
+						<input type="hidden" name="replyId" value={id} />
+						<Button
+							type="submit"
+							variant="ghost"
+							class="flex items-center gap-2 font-bold text-destructive"
+							><Trash class="h-4 w-4" />Delete</Button
+						>
+					</form>
+				{:else}
+					<form action="?/deleteComment" method="POST" use:enhance>
+						<input type="hidden" name="id" value={id} />
+						<Button
+							type="submit"
+							variant="ghost"
+							class="flex items-center gap-2 font-bold text-destructive"
+							><Trash class="h-4 w-4" />Delete</Button
+						>
+					</form>
+				{/if}
 				<Button
 					on:click={() => (editing = true)}
 					variant="ghost"

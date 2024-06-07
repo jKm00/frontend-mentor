@@ -53,35 +53,31 @@ function deleteComment(id: number, username: string) {
 }
 
 /**
- * Returns the comment/reply of the id provided
- * @param id
+ * Updates a comment
+ * @param id of comment to update
+ * @param content new content to update the comment to
+ * @param username of user trying to update the comment
+ * @returns updated comments list
  */
-function find(id: number) {
-	let found: Comment | Reply | null = null;
-	let i = 0;
-	while (found === null && i < user.comments.length) {
-		let j = 0;
-		const currentComment = user.comments[i];
+function updateComment(id: number, content: string, username: String) {
+	const commentIndex = user.comments.findIndex((c) => c.id === id);
 
-		if (currentComment.id === id) {
-			found = currentComment;
-		}
-
-		while (found === null && j < currentComment.replies.length) {
-			const currentReply = currentComment.replies[j];
-
-			if (currentReply.id === id) {
-				found = currentReply;
-			}
-
-			j++;
-		}
-		i++;
+	if (commentIndex === -1) {
+		throw new Error(`Could not find comment with id: ${id}`);
 	}
+
+	if (user.comments[commentIndex].user.username !== username) {
+		throw new Error(`You are not the owner of the comment with id (${id}) and cannot edit it!`);
+	}
+
+	user.comments[commentIndex].content = content;
+
+	return user.comments;
 }
 
 export const comment = {
 	findAll,
 	add,
-	deleteComment
+	deleteComment,
+	updateComment
 };

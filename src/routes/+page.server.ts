@@ -74,6 +74,36 @@ export const actions: Actions = {
 			}
 		}
 	},
+	updateComment: async (event) => {
+		const user = event.cookies.get('user');
+
+		if (!user) {
+			redirect(301, '/login');
+		}
+
+		const form = await event.request.formData();
+		const id = form.get('id') as string;
+		const content = form.get('content') as string;
+
+		if (!id || !content) {
+			redirect(
+				'/',
+				{ type: 'error', message: 'Could not update comment... Please try again later' },
+				event
+			);
+		}
+
+		try {
+			const updatedComments = comment.updateComment(Number(id), content, user);
+			return { status: 201, message: 'Comment edited!', data: updatedComments };
+		} catch (err) {
+			if (err instanceof Error) {
+				redirect('/', { type: 'error', message: err.message }, event);
+			} else {
+				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
+			}
+		}
+	},
 	addReply: async (event) => {
 		const user = event.cookies.get('user');
 
@@ -130,6 +160,37 @@ export const actions: Actions = {
 			const updatedComments = reply.deleteReply(Number(replyId), Number(commentId), user);
 
 			return { status: 200, message: 'Reply deleted!', data: updatedComments };
+		} catch (err) {
+			if (err instanceof Error) {
+				redirect('/', { type: 'error', message: err.message }, event);
+			} else {
+				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
+			}
+		}
+	},
+	updateReply: async (event) => {
+		const user = event.cookies.get('user');
+
+		if (!user) {
+			redirect(301, '/login');
+		}
+
+		const form = await event.request.formData();
+		const commentId = form.get('commentId') as string;
+		const replyId = form.get('replyId') as string;
+		const content = form.get('content') as string;
+
+		if (!commentId || !replyId || !content) {
+			redirect(
+				'/',
+				{ type: 'error', message: 'Could not update reply... Please try again later' },
+				event
+			);
+		}
+
+		try {
+			const updatedComments = reply.updateReply(Number(commentId), Number(replyId), content, user);
+			return { status: 201, message: 'Reply edited!', data: updatedComments };
 		} catch (err) {
 			if (err instanceof Error) {
 				redirect('/', { type: 'error', message: err.message }, event);

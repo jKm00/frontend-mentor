@@ -61,7 +61,40 @@ function deleteReply(replyId: number, commentId: number, username: string) {
 	return user.comments;
 }
 
+/**
+ * Updates the content of a reply
+ * @param commentId id of the comment the reply is attached to
+ * @param replyId of the reply
+ * @param content the new content to update to
+ * @param username of the user trying to update the reply
+ * @returns updated comments list
+ */
+function updateReply(commentId: number, replyId: number, content: string, username: string) {
+	const commentIndex = user.comments.findIndex((c) => c.id === commentId);
+
+	if (commentIndex === -1) {
+		throw new Error(`Could not find comment with id: ${commentId})`);
+	}
+
+	const replyIndex = user.comments[commentIndex].replies.findIndex((r) => r.id === replyId);
+
+	if (replyId === -1) {
+		throw new Error(`Could not find reply with id: (${commentId})`);
+	}
+
+	if (user.comments[commentIndex].replies[replyIndex].user.username !== username) {
+		throw new Error(
+			`You are not the owner of the reply with the id (${replyId}) and cannot edit it!`
+		);
+	}
+
+	user.comments[commentIndex].replies[replyIndex].content = content;
+
+	return user.comments;
+}
+
 export const reply = {
 	addReply,
-	deleteReply
+	deleteReply,
+	updateReply
 };
