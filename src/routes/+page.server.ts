@@ -1,5 +1,6 @@
 import { comment } from '$lib/server/comments';
 import { currentUser } from '$lib/server/user';
+import type { User } from '$lib/types';
 import type { Actions } from './$types';
 import { redirect } from 'sveltekit-flash-message/server';
 
@@ -21,12 +22,24 @@ export const load = async () => {
 export const actions: Actions = {
 	add: async (event) => {
 		const form = await event.request.formData();
-		const comment = form.get('comment');
+		const content = form.get('content') as string;
+		const author = form.get('author') as string;
 
-		if (!comment || comment === '') {
-			redirect('/', { type: 'error', message: 'No comment provided' }, event);
+		if (!author) {
+			redirect('/', { type: 'error', message: 'Author not available, please try again!' }, event);
 		}
 
-		return { status: 201, message: 'Comment posted' };
+		if (!content || content === '') {
+			redirect('/', { type: 'error', message: 'Need to provide a comment!' }, event);
+		}
+
+		try {
+			const authorObj = JSON.parse(author) as User;
+			const allComments = comment.add(content, authorObj);
+
+			return { status: 201, data: allComments };
+		} catch (err) {
+			redirect('/', { type: 'error', message: 'Author not available, please try again!' }, event);
+		}
 	}
 };

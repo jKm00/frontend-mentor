@@ -2,10 +2,17 @@
 	import { auth } from '$lib/auth.js';
 	import AddComment from '$lib/components/custom/AddComment.svelte';
 	import Comment from '$lib/components/custom/Comment.svelte';
+	import { toast } from 'svelte-sonner';
 
 	export let data;
+	export let form;
 
-	const { currentUser, comments } = data;
+	let { currentUser, comments } = data;
+
+	$: if (form?.status === 201 && form.data) {
+		comments = form.data;
+		toast.success('Comment posted!');
+	}
 
 	$: auth.set(currentUser);
 </script>

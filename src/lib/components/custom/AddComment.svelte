@@ -3,6 +3,8 @@
 	import type { User } from '$lib/types';
 	import { Button } from '$lib/components/ui/button';
 	import { enhance } from '$app/forms';
+	import { auth } from '$lib/auth';
+	import { goto } from '$app/navigation';
 
 	export let currentUser: User;
 
@@ -12,10 +14,11 @@
 </script>
 
 <form method="POST" action="?/add" use:enhance class="grid gap-4 rounded-lg bg-card p-4">
+	<input type="hidden" name="author" value={JSON.stringify($auth)} />
 	<div id="comment">
 		<Textarea
 			bind:value={comment}
-			name="comment"
+			name="content"
 			placeholder="Add a comment..."
 			class="w-full resize-y bg-card"
 		/>

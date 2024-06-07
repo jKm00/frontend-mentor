@@ -12,8 +12,10 @@
 		switch ($flash.type) {
 			case 'success':
 				toast.success($flash.message);
+				break;
 			case 'error':
 				toast.error($flash.message);
+				break;
 		}
 
 		// Clear to avoid double-toasting
@@ -27,7 +29,7 @@
 
 <ModeWatcher defaultMode="dark" track={false} />
 
-<Toaster richColors position="top-center" />
+<Toaster position="top-center" richColors />
 
 <div class="width mx-auto p-4">
 	<slot />
