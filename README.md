@@ -1,38 +1,57 @@
-# create-svelte
+# Frontend Mentor - Interactive comments section solution
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This is a solution to the [Interactive comments section challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/interactive-comments-section-iG1RugEG9). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-## Creating a project
+## Table of contents
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [Continued development](#continued-development)
+- [Author](#author)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Overview
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### The challenge
 
-## Developing
+Users should be able to:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- View the optimal layout for the app depending on their device's screen size
+- See hover states for all interactive elements on the page
+- Create, Read, Update, and Delete comments and replies
+- Upvote and downvote comments
+- **Bonus**: If you're building a purely front-end project, use `localStorage` to save the current state in the browser that persists when the browser is refreshed.
+- **Bonus**: Instead of using the `createdAt` strings from the `data.json` file, try using timestamps and dynamically track the time since the comment or reply was posted.
 
-```bash
-npm run dev
+### Screenshot
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+![Main page](./docs/screenshots/main-page.png)
 
-## Building
+### Links
 
-To create a production version of your app:
+TBD
 
-```bash
-npm run build
-```
+- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
 
-You can preview the production build with `npm run preview`.
+## My process
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+### Built with
+
+- Sveltekit
+- Sveltekit flash messages
+- Shadcn w/ Tailwind
+- Mobile-first workflow
+
+### Continued development
+
+Store data in persistant storage like a database. Replace CRUD operations to use the database instead of memory objects.
+
+## Author
+
+- Website - [Joakim Edvardsen](https://www.edvardsen.dev/)
+- Frontend Mentor - [@jKm00](https://www.frontendmentor.io/profile/jKm00)
+- GitHub - [@jKm00](https://github.com/jKm00)
