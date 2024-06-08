@@ -21,12 +21,15 @@
 	let editing = false;
 	let replying = false;
 
+	let replyValue = `@${username}, `;
+
 	function update() {
 		editing = false;
 	}
 
-	function addReply() {
+	function resetReply() {
 		replying = false;
+		replyValue = `@${username}, `;
 	}
 </script>
 
@@ -34,6 +37,9 @@
 	<div id="header" class="flex items-center gap-4">
 		<img src={profilePicture} alt="{username}'s profile picture" class="h-8 w-8" />
 		<p class="font-bold">{username}</p>
+		{#if username === $auth?.username}
+			<span class="rounded bg-primary px-2 py-1 text-xs text-primary-foreground">You</span>
+		{/if}
 		<span>{createdAt}</span>
 	</div>
 	<div id="body">
@@ -174,12 +180,20 @@
 		transition:fade={{ duration: 150 }}
 		method="POST"
 		action="?/addReply"
-		use:enhance={addReply}
+		use:enhance={resetReply}
 		class="mt-4 flex flex-col gap-2 rounded-lg bg-card p-4"
 	>
 		<input type="hidden" name="commentId" value={isReply ? commentId : id} />
 		<input type="hidden" name="replyingTo" value={username} />
-		<Textarea name="content" placeholder="Add a reply..." class="resize-y bg-card" />
+		<div class="flex gap-4">
+			<img src={$auth?.image.png} alt="{$auth?.username}'s profile picture" class="h-8 w-8" />
+			<Textarea
+				bind:value={replyValue}
+				name="content"
+				placeholder="Add a reply..."
+				class="resize-y bg-card"
+			/>
+		</div>
 		<Button type="submit" class="self-end">Post reply</Button>
 	</form>
 {/if}

@@ -19,7 +19,7 @@ function addReply(commentId: number, replyingTo: string, content: string, author
 
 	user.comments[commentIndex].replies.push({
 		id: getNextId(),
-		content,
+		content: stipReplyingTo(content),
 		createdAt: new Date().toDateString(),
 		score: 1,
 		user: author,
@@ -27,6 +27,20 @@ function addReply(commentId: number, replyingTo: string, content: string, author
 	});
 
 	return user.comments;
+}
+
+/**
+ * Removes the '@username' from the start of the reply if there is any.
+ * @param content to strip the replying to from
+ * @returns content without any username in the beginning
+ */
+function stipReplyingTo(content: string) {
+	const contentArray = content.split(' ');
+
+	if (contentArray[0].includes('@')) {
+		return contentArray.slice(1).join(' ');
+	}
+	return contentArray.join(' ');
 }
 
 /**
