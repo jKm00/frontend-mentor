@@ -32,10 +32,8 @@ Users should be able to:
 
 ### Links
 
-TBD
-
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [https://www.frontendmentor.io/solutions/interactive-comment-section-with-sveltekit-and-tailwind-cB78o0-5ZS](https://www.frontendmentor.io/solutions/interactive-comment-section-with-sveltekit-and-tailwind-cB78o0-5ZS)
+- Live Site URL: [https://charming-banoffee-a45fde.netlify.app/login](https://charming-banoffee-a45fde.netlify.app/login)
 
 ## My process
 
