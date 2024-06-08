@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { auth } from '$lib/auth';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { Button } from '$lib/components/ui/button';
 	import { Minus, Plus, Reply as ReplyIcon, Trash, Pencil, Save } from 'lucide-svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 
 	export let id: number; // Id of the current comment/reply
 	export let profilePicture: string;
@@ -96,28 +97,44 @@
 	<div id="reply" class="flex justify-self-end">
 		{#if $auth?.username === username}
 			{#if !editing}
-				{#if isReply}
-					<form action="?/deleteReply" method="POST" use:enhance>
-						<input type="hidden" name="commentId" value={commentId} />
-						<input type="hidden" name="replyId" value={id} />
+				<AlertDialog.Root>
+					<AlertDialog.Trigger asChild let:builder>
 						<Button
-							type="submit"
+							builders={[builder]}
 							variant="ghost"
-							class="flex items-center gap-2 font-bold text-destructive"
+							class="flex items-center gap-2 font-bold text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground"
 							><Trash class="h-4 w-4" />Delete</Button
 						>
-					</form>
-				{:else}
-					<form action="?/deleteComment" method="POST" use:enhance>
-						<input type="hidden" name="id" value={id} />
-						<Button
-							type="submit"
-							variant="ghost"
-							class="flex items-center gap-2 font-bold text-destructive"
-							><Trash class="h-4 w-4" />Delete</Button
-						>
-					</form>
-				{/if}
+					</AlertDialog.Trigger>
+					<AlertDialog.Content>
+						<AlertDialog.Header>
+							<AlertDialog.Title>Delete comment</AlertDialog.Title>
+							<AlertDialog.Description
+								>Are you sure you want to delete this comment? This will remove the comment and
+								can't be undone.</AlertDialog.Description
+							>
+						</AlertDialog.Header>
+						<AlertDialog.Footer>
+							<AlertDialog.Cancel>No, cancel</AlertDialog.Cancel>
+							{#if isReply}
+								<form action="?/deleteReply" method="POST" use:enhance>
+									<input type="hidden" name="commentId" value={commentId} />
+									<input type="hidden" name="replyId" value={id} />
+									<AlertDialog.Action type="submit" class="bg-destructive hover:bg-destructive/90"
+										>Yes, delete</AlertDialog.Action
+									>
+								</form>
+							{:else}
+								<form action="?/deleteComment" method="POST" use:enhance>
+									<input type="hidden" name="id" value={id} />
+									<AlertDialog.Action type="submit" class="bg-destructive hover:bg-destructive/90"
+										>Yes, delete</AlertDialog.Action
+									>
+								</form>
+							{/if}
+						</AlertDialog.Footer>
+					</AlertDialog.Content>
+				</AlertDialog.Root>
 				<Button
 					on:click={() => (editing = true)}
 					variant="ghost"
