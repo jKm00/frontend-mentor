@@ -17,4 +17,7 @@
 		<Input id="username" name="username" placeholder="myusername" class="bg-card" />
 		<Button type="submit">Login</Button>
 	</form>
+	<p class="mt-10 text-center text-xs text-muted-foreground">
+		Just enter the username that you want <br />to be displayed when you post something🙃
+	</p>
 </div>
