@@ -75,9 +75,48 @@ function updateComment(id: number, content: string, username: String) {
 	return user.comments;
 }
 
+/**
+ * Increments the score of a comment
+ * @param id of the comment to increment
+ * @returns updated list of comments
+ */
+function incrementScore(id: number) {
+	return addToScore(id, 1);
+}
+
+/**
+ * Decrements the score of a comment
+ * @param id of the comment to decrement
+ * @returns updated list of comments
+ */
+function decrementScore(id: number) {
+	return addToScore(id, -1);
+}
+
+/**
+ * Adds a number to the score of a comment
+ * @param id of the comment to add the score to
+ * @param number number to add to the score
+ * @returns updated list of comments
+ */
+function addToScore(id: number, number: number) {
+	const commentIndex = user.comments.findIndex((c) => c.id === id);
+
+	if (commentIndex === -1) {
+		throw new Error(`Could not find comment with id: ${id}`);
+	}
+
+	const score = user.comments[commentIndex].score;
+	user.comments[commentIndex].score = score + number;
+
+	return user.comments;
+}
+
 export const comment = {
 	findAll,
 	add,
 	deleteComment,
-	updateComment
+	updateComment,
+	incrementScore,
+	decrementScore
 };

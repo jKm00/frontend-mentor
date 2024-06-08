@@ -1,7 +1,7 @@
 import { getUserObject } from '$lib/helpers';
 import { comment } from '$lib/server/comments';
 import { reply } from '$lib/server/reply';
-import type { User } from '$lib/types';
+import type { Comment, User } from '$lib/types';
 import type { Actions } from './$types';
 import { redirect } from 'sveltekit-flash-message/server';
 
@@ -198,5 +198,65 @@ export const actions: Actions = {
 				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
 			}
 		}
+	},
+	incrementScore: async (event) => {
+		const form = await event.request.formData();
+		const commentId = form.get('commentId') as string;
+		const replyId = form.get('replyId') as string;
+
+		if (!commentId) {
+			redirect(
+				'/',
+				{ type: 'error', message: 'Could not increment score... Please try again later' },
+				event
+			);
+		}
+
+		let updatedComments: Comment[] = [];
+		try {
+			if (!replyId) {
+				updatedComments = comment.incrementScore(Number(commentId));
+			} else {
+				updatedComments = reply.incrementScore(Number(commentId), Number(replyId));
+			}
+		} catch (err) {
+			if (err instanceof Error) {
+				redirect('/', { type: 'error', message: err.message }, event);
+			} else {
+				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
+			}
+		}
+
+		return { status: 201, data: updatedComments };
+	},
+	decrementScore: async (event) => {
+		const form = await event.request.formData();
+		const commentId = form.get('commentId') as string;
+		const replyId = form.get('replyId') as string;
+
+		if (!commentId) {
+			redirect(
+				'/',
+				{ type: 'error', message: 'Could not increment score... Please try again later' },
+				event
+			);
+		}
+
+		let updatedComments: Comment[] = [];
+		try {
+			if (!replyId) {
+				updatedComments = comment.decrementScore(Number(commentId));
+			} else {
+				updatedComments = reply.decrementScore(Number(commentId), Number(replyId));
+			}
+		} catch (err) {
+			if (err instanceof Error) {
+				redirect('/', { type: 'error', message: err.message }, event);
+			} else {
+				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
+			}
+		}
+
+		return { status: 201, data: updatedComments };
 	}
 };

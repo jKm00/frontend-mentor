@@ -85,14 +85,24 @@
 		{/if}
 	</div>
 	{#if !editing}
-		<div
+		<form
+			method="POST"
+			use:enhance
 			id="vote"
 			class="flex items-center justify-self-start rounded-lg bg-primary/10 md:flex-col md:self-start"
 		>
-			<button class="p-3 font-bold"><Plus class="h-4 w-4 text-primary/50" /></button>
+			<input type="hidden" name="commentId" value={isReply ? commentId : id} />
+			{#if isReply}
+				<input type="hidden" name="replyId" value={id} />
+			{/if}
+			<button type="submit" formaction="?/incrementScore" class="p-3 font-bold"
+				><Plus class="h-4 w-4 text-primary/50" /></button
+			>
 			<span class="font-bold text-primary">{score}</span>
-			<button class="p-3 font-bold"><Minus class="h-4 w-4 text-primary/50" /></button>
-		</div>
+			<button type="submit" formaction="?/decrementScore" class="p-3 font-bold"
+				><Minus class="h-4 w-4 text-primary/50" /></button
+			>
+		</form>
 	{/if}
 	<div id="reply" class="flex justify-self-end">
 		{#if $auth?.username === username}

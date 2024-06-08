@@ -93,8 +93,56 @@ function updateReply(commentId: number, replyId: number, content: string, userna
 	return user.comments;
 }
 
+/**
+ * Increments the score of a reply
+ * @param commentId id of the comment the reply is attached to
+ * @param replyId id of the reply to increment
+ * @returns updated list of comments
+ */
+function incrementScore(commentId: number, replyId: number) {
+	return addToScore(commentId, replyId, 1);
+}
+
+/**
+ * Decrements the score of a reply
+ * @param commentId id of the comment the reply is attached to
+ * @param replyId id of the reply to decrement
+ * @returns updated list of comments
+ */
+function decrementScore(commentId: number, replyId: number) {
+	return addToScore(commentId, replyId, -1);
+}
+
+/**
+ * Adds a number to a reply
+ * @param commentId id of the comment the reply is attached to
+ * @param replyId id of the reply to add to the score
+ * @param number to add to the score
+ * @returns updated list of comments
+ */
+function addToScore(commentId: number, replyId: number, number: number) {
+	const commentIndex = user.comments.findIndex((c) => c.id === commentId);
+
+	if (commentIndex === -1) {
+		throw new Error(`Could not find comment with id: ${commentId}`);
+	}
+
+	const replyIndex = user.comments[commentIndex].replies.findIndex((r) => r.id === replyId);
+
+	if (replyIndex === -1) {
+		throw new Error(`Coult not find reply with id: ${replyId}`);
+	}
+
+	const score = user.comments[commentIndex].replies[replyIndex].score;
+	user.comments[commentIndex].replies[replyIndex].score = score + number;
+
+	return user.comments;
+}
+
 export const reply = {
 	addReply,
 	deleteReply,
-	updateReply
+	updateReply,
+	incrementScore,
+	decrementScore
 };

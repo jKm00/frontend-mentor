@@ -10,8 +10,11 @@
 	let { comments } = data;
 
 	$: if (form && String(form.status)[0] === '2' && form.data && form.message) {
-		comments = form.data;
 		toast.success(form.message);
+	}
+
+	$: if (form && form.data) {
+		comments = form.data;
 	}
 </script>
 
