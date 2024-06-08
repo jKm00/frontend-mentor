@@ -13,7 +13,7 @@ export const actions: Actions = {
 
 		event.cookies.set('user', username, {
 			path: '/',
-			maxAge: 60 * 10, // 10 minutes,
+			maxAge: 60 * 20, // 20 minutes,
 			httpOnly: true,
 			sameSite: 'strict',
 			secure: !dev
