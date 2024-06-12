@@ -204,8 +204,6 @@ export const actions: Actions = {
 			);
 		}
 
-		let updatedComments: Comment[] = [];
-
 		if (!replyId) {
 			return safeExecute(
 				{
