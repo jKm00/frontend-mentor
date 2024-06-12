@@ -136,14 +136,18 @@
 								<form action="?/deleteReply" method="POST" use:enhance>
 									<input type="hidden" name="commentId" value={commentId} />
 									<input type="hidden" name="replyId" value={id} />
-									<AlertDialog.Action type="submit" class="bg-destructive hover:bg-destructive/90"
+									<AlertDialog.Action
+										type="submit"
+										class="w-full bg-destructive hover:bg-destructive/90"
 										>Yes, delete</AlertDialog.Action
 									>
 								</form>
 							{:else}
 								<form action="?/deleteComment" method="POST" use:enhance>
 									<input type="hidden" name="id" value={id} />
-									<AlertDialog.Action type="submit" class="bg-destructive hover:bg-destructive/90"
+									<AlertDialog.Action
+										type="submit"
+										class="w-full bg-destructive hover:bg-destructive/90"
 										>Yes, delete</AlertDialog.Action
 									>
 								</form>
