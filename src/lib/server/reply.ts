@@ -1,6 +1,6 @@
 import type { User } from '$lib/types';
 import user from './data.json';
-import { idGenerator } from './utils';
+import { id } from './utils';
 
 /**
  * Adds a reply to a comment
@@ -18,7 +18,7 @@ function addReply(commentId: number, replyingTo: string, content: string, author
 	}
 
 	user.comments[commentIndex].replies.push({
-		id: idGenerator.next().value || 0,
+		id: id.next().value || 0,
 		content: stipReplyingTo(content),
 		createdAt: new Date().toDateString(),
 		score: 1,
