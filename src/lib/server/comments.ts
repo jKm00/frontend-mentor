@@ -1,6 +1,6 @@
 import type { User, Comment, Reply } from '$lib/types';
 import user from './data.json';
-import { getNextId } from './utils';
+import { idGenerator } from './utils';
 
 function findAll() {
 	return user.comments;
@@ -13,10 +13,8 @@ function findAll() {
  * @returns updated list of comments
  */
 function add(content: string, author: User) {
-	const id = getNextId();
-
 	const comment = {
-		id,
+		id: idGenerator.next().value || 0,
 		content,
 		createdAt: new Date().toDateString(),
 		score: 1,

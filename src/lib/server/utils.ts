@@ -1,18 +1,48 @@
-import user from './data.json';
+import type { RequestEvent } from '@sveltejs/kit';
+import { redirect } from 'sveltekit-flash-message/server';
 
-export function getNextId() {
-	let highestIndex = 0;
-	user.comments.forEach((c) => {
-		if (c.id > highestIndex) {
-			highestIndex = c.id;
+function* idIterator() {
+	let index = 5;
+	while (true) {
+		yield index++;
+	}
+}
+
+export const idGenerator = idIterator();
+
+type ActionFunction = (...args: any[]) => any;
+
+interface SafeExecuteOption<T extends ActionFunction> {
+	action: T;
+	event: RequestEvent;
+	options?: {
+		redirectUrl?: string;
+		successMsg?: string;
+		fallbackErrorMsg: string;
+	};
+}
+
+export function safeExecute<T extends ActionFunction>(
+	{ action, event, options }: SafeExecuteOption<T>,
+	...args: Parameters<T>
+): { status: number; message: string; data: ReturnType<T> } {
+	let result;
+	try {
+		result = action(...args);
+	} catch (err) {
+		if (err instanceof Error) {
+			redirect(options?.redirectUrl || '/', { type: 'error', message: err.message }, event);
+		} else {
+			redirect(
+				options?.redirectUrl || '/',
+				{
+					type: 'error',
+					message: options?.fallbackErrorMsg || 'Something went wrong, please try again!'
+				},
+				event
+			);
 		}
+	}
 
-		c.replies.forEach((r) => {
-			if (r.id > highestIndex) {
-				highestIndex = r.id;
-			}
-		});
-	});
-
-	return highestIndex + 1;
+	return { status: 200, message: options?.successMsg || 'Success', data: result };
 }

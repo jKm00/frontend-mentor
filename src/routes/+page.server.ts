@@ -1,6 +1,7 @@
 import { getUserObject } from '$lib/helpers';
 import { comment } from '$lib/server/comments';
 import { reply } from '$lib/server/reply';
+import { safeExecute } from '$lib/server/utils';
 import type { Comment, User } from '$lib/types';
 import type { Actions } from './$types';
 import { redirect } from 'sveltekit-flash-message/server';
@@ -32,13 +33,14 @@ export const actions: Actions = {
 			redirect('/', { type: 'error', message: 'Need to provide a comment!' }, event);
 		}
 
-		try {
-			const updatedComments = comment.add(content, userObj);
-
-			return { status: 201, message: 'Comment posted!', data: updatedComments };
-		} catch (err) {
-			redirect('/', { type: 'error', message: 'Author not available, please try again!' }, event);
-		}
+		return safeExecute(
+			{
+				action: comment.add,
+				event
+			},
+			content,
+			userObj
+		);
 	},
 	deleteComment: async (event) => {
 		const user = event.cookies.get('user');
@@ -58,21 +60,14 @@ export const actions: Actions = {
 			);
 		}
 
-		if (!user) {
-			redirect('/', { type: 'error', message: 'Author id not provided, please try again!' }, event);
-		}
-
-		try {
-			const updatedComments = comment.deleteComment(Number(id), user);
-
-			return { status: 200, message: 'Comment deleted!', data: updatedComments };
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
+		return safeExecute(
+			{
+				action: comment.deleteComment,
+				event
+			},
+			Number(id),
+			user
+		);
 	},
 	updateComment: async (event) => {
 		const user = event.cookies.get('user');
@@ -93,16 +88,15 @@ export const actions: Actions = {
 			);
 		}
 
-		try {
-			const updatedComments = comment.updateComment(Number(id), content, user);
-			return { status: 201, message: 'Comment edited!', data: updatedComments };
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
+		return safeExecute(
+			{
+				action: comment.updateComment,
+				event
+			},
+			Number(id),
+			content,
+			user
+		);
 	},
 	addReply: async (event) => {
 		const user = event.cookies.get('user');
@@ -126,16 +120,16 @@ export const actions: Actions = {
 			);
 		}
 
-		try {
-			const updatedComments = reply.addReply(Number(commentId), replyingTo, content, userObj);
-			return { status: 201, message: 'Reply posted!', data: updatedComments };
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
+		return safeExecute(
+			{
+				action: reply.addReply,
+				event
+			},
+			Number(commentId),
+			replyingTo,
+			content,
+			userObj
+		);
 	},
 	deleteReply: async (event) => {
 		const user = event.cookies.get('user');
@@ -156,17 +150,15 @@ export const actions: Actions = {
 			);
 		}
 
-		try {
-			const updatedComments = reply.deleteReply(Number(replyId), Number(commentId), user);
-
-			return { status: 200, message: 'Reply deleted!', data: updatedComments };
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
+		return safeExecute(
+			{
+				action: reply.deleteReply,
+				event
+			},
+			Number(replyId),
+			Number(commentId),
+			user
+		);
 	},
 	updateReply: async (event) => {
 		const user = event.cookies.get('user');
@@ -188,16 +180,16 @@ export const actions: Actions = {
 			);
 		}
 
-		try {
-			const updatedComments = reply.updateReply(Number(commentId), Number(replyId), content, user);
-			return { status: 201, message: 'Reply edited!', data: updatedComments };
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
+		return safeExecute(
+			{
+				action: reply.updateReply,
+				event
+			},
+			Number(commentId),
+			Number(replyId),
+			content,
+			user
+		);
 	},
 	incrementScore: async (event) => {
 		const form = await event.request.formData();
@@ -213,21 +205,25 @@ export const actions: Actions = {
 		}
 
 		let updatedComments: Comment[] = [];
-		try {
-			if (!replyId) {
-				updatedComments = comment.incrementScore(Number(commentId));
-			} else {
-				updatedComments = reply.incrementScore(Number(commentId), Number(replyId));
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
-		}
 
-		return { status: 201, data: updatedComments };
+		if (!replyId) {
+			return safeExecute(
+				{
+					action: comment.incrementScore,
+					event
+				},
+				Number(commentId)
+			);
+		} else {
+			return safeExecute(
+				{
+					action: reply.incrementScore,
+					event
+				},
+				Number(commentId),
+				Number(replyId)
+			);
+		}
 	},
 	decrementScore: async (event) => {
 		const form = await event.request.formData();
@@ -242,21 +238,23 @@ export const actions: Actions = {
 			);
 		}
 
-		let updatedComments: Comment[] = [];
-		try {
-			if (!replyId) {
-				updatedComments = comment.decrementScore(Number(commentId));
-			} else {
-				updatedComments = reply.decrementScore(Number(commentId), Number(replyId));
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				redirect('/', { type: 'error', message: err.message }, event);
-			} else {
-				redirect('/', { type: 'error', message: 'Something went wrong, please try again!' }, event);
-			}
+		if (!replyId) {
+			return safeExecute(
+				{
+					action: comment.decrementScore,
+					event
+				},
+				Number(commentId)
+			);
+		} else {
+			return safeExecute(
+				{
+					action: reply.decrementScore,
+					event
+				},
+				Number(commentId),
+				Number(replyId)
+			);
 		}
-
-		return { status: 201, data: updatedComments };
 	}
 };
