@@ -1,10 +1,20 @@
 import { Button } from '@/components/button'
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export const Route = createFileRoute('/')({ component: App })
 
+type Difficulty = 'easy' | 'medium' | 'hard'
+type Mode = 'time' | 'passage'
+type Status = 'waiting' | 'on-going' | 'finished'
+
 function App() {
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+  const [mode, setMode] = useState<Mode>('time')
+
+  const statusRef = useRef<Status>('waiting')
+  const [time, setTime] = useState(60)
+
   const text =
     "This is a dummy test text. Replace it with actual text for the typing test. You can use Lorem Ipsum or any other placeholder text to create a realistic typing experience for users. It's important to have a variety of characters (including punctuation and spaces) to make the test more challenging and accurate in measuring typing speed and accuracy."
   const textArray = text.split('')
@@ -19,32 +29,86 @@ function App() {
   }, [])
 
   function handleKeyPress(event: KeyboardEvent) {
-    console.log(event)
+    const status = statusRef.current
+    if (status === 'finished') return
+
+    if (status === 'waiting') {
+      start()
+    }
+
     if (event.key === 'Backspace') {
       if (event.ctrlKey) {
-        setTyped((prev) => {
-          const newTyped = [...prev]
-          while (newTyped.length > 0 && newTyped[newTyped.length - 1] === ' ') {
-            newTyped.pop()
-          }
-          while (newTyped.length > 0 && newTyped[newTyped.length - 1] !== ' ') {
-            newTyped.pop()
-          }
-          return newTyped
-        })
+        removeWord()
+      } else if (event.metaKey) {
+        clearInput()
       } else {
-        setTyped((prev) => prev.slice(0, -1))
+        removeLetter()
       }
     } else if (event.key.length === 1) {
-      setTyped((prev) => [...prev, event.key])
+      addLetter(event.key)
     }
+  }
+
+  function start() {
+    statusRef.current = 'on-going'
+
+    const interval = setInterval(() => {
+      setTime((prev) => {
+        if (prev === 0) {
+          clearInterval(interval)
+          end()
+          return prev
+        } else {
+          return prev - 1
+        }
+      })
+    }, 1000)
+  }
+
+  function end() {
+    statusRef.current = 'finished'
+  }
+
+  function addLetter(letter: string) {
+    setTyped((prev) => [...prev, letter])
+  }
+
+  function removeLetter() {
+    setTyped((prev) => prev.slice(0, -1))
+  }
+
+  function removeWord() {
+    setTyped((prev) => {
+      const newTyped = [...prev]
+      while (newTyped.length > 0 && newTyped[newTyped.length - 1] === ' ') {
+        newTyped.pop()
+      }
+      while (newTyped.length > 0 && newTyped[newTyped.length - 1] !== ' ') {
+        newTyped.pop()
+      }
+      return newTyped
+    })
+  }
+
+  function clearInput() {
+    setTyped([])
   }
 
   return (
     <div className="max-w-5xl mx-auto min-h-screen flex flex-col">
       <Header />
-      <ToolBar />
-      <Editor text={textArray} typed={typed} />
+      <ToolBar
+        difficulty={difficulty}
+        onDifficultyChange={setDifficulty}
+        mode={mode}
+        onModeChange={setMode}
+      />
+      <Editor
+        text={textArray}
+        typed={typed}
+        time={time}
+        status={statusRef.current}
+      />
     </div>
   )
 }
@@ -68,7 +132,17 @@ function Header() {
   )
 }
 
-function ToolBar() {
+function ToolBar({
+  difficulty,
+  onDifficultyChange,
+  mode,
+  onModeChange,
+}: {
+  difficulty: Difficulty
+  onDifficultyChange: (difficulty: Difficulty) => void
+  mode: Mode
+  onModeChange: (mode: Mode) => void
+}) {
   return (
     <div className="flex justify-between text-neutral-300 mb-4">
       <div className="flex items-center">
@@ -85,26 +159,71 @@ function ToolBar() {
       <div className="flex gap-4">
         <div className="flex gap-1 items-center">
           <p>Difficulty: </p>
-          <Button>Easy</Button>
-          <Button>Medium</Button>
-          <Button>Hard</Button>
+          <Button
+            onClick={() => onDifficultyChange('easy')}
+            active={difficulty === 'easy'}
+          >
+            Easy
+          </Button>
+          <Button
+            onClick={() => onDifficultyChange('medium')}
+            active={difficulty === 'medium'}
+          >
+            Medium
+          </Button>
+          <Button
+            onClick={() => onDifficultyChange('hard')}
+            active={difficulty === 'hard'}
+          >
+            Hard
+          </Button>
         </div>
         <div className="flex gap-1 items-center">
           <p>Mode: </p>
-          <Button>Time (60s)</Button>
-          <Button>Passage</Button>
+          <Button onClick={() => onModeChange('time')} active={mode === 'time'}>
+            Time (60s)
+          </Button>
+          <Button
+            onClick={() => onModeChange('passage')}
+            active={mode === 'passage'}
+          >
+            Passage
+          </Button>
         </div>
       </div>
     </div>
   )
 }
 
-function Editor({ text, typed }: { text: string[]; typed: string[] }) {
+function Editor({
+  text,
+  typed,
+  time,
+  status,
+}: {
+  text: string[]
+  typed: string[]
+  time: number
+  status: Status
+}) {
   return (
-    <div className="flex items-center mt-24">
+    <div className="flex flex-col mt-24">
+      <p
+        className={`${status === 'on-going' ? 'text-yellow-400' : 'text-transparent'} text-2xl mb-4`}
+      >
+        {time}
+      </p>
       <p className="text-2xl font-semibold">
         {text.map((char, index) => {
           const typedChar = typed[index]
+
+          if (index === typed.length) {
+            return (
+              <span key={index} className="border-l">
+                {char}
+              </span>
+            )
+          }
 
           if (typedChar === undefined) {
             return <span key={index}>{char}</span>
@@ -119,12 +238,17 @@ function Editor({ text, typed }: { text: string[]; typed: string[] }) {
           }
 
           return (
-            <span key={index} className="text-red-400">
+            <span key={index} className="text-red-400 underline">
               {char}
             </span>
           )
         })}
       </p>
+      {status === 'waiting' && (
+        <p className="text-center text-neutral-400 text-sm mt-8">
+          Start typing to start the timer
+        </p>
+      )}
     </div>
   )
 }
